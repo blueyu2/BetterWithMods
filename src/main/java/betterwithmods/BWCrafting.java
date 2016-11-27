@@ -1,5 +1,6 @@
 package betterwithmods;
 
+import betterwithmods.asm.tweaks.TileEntityFurnaceTweaks;
 import betterwithmods.blocks.BlockUnfiredPottery.EnumPotteryType;
 import betterwithmods.blocks.mini.BlockMini;
 import betterwithmods.config.BWConfig;
@@ -37,6 +38,7 @@ public class BWCrafting {
         addHERecipes();
         addHardcoreDiamonds();
         addSteelAnvilRecipes();
+        addHardcoreSmelting();
     }
 
     public static void postInit() {
@@ -547,6 +549,24 @@ public class BWCrafting {
         }
     }
 
+    private static void addHardcoreSmelting() {
+        //TODO remove nonmetal ore smelting
+        addCookTime("ore*", 1600);
+        addCookTime("cobblestone", 1600);
+        addCookTime(Blocks.STONEBRICK, 1600);
+
+        addCookTime("sand", 800);
+        addCookTime(Items.CLAY_BALL, 800);
+        addCookTime(Blocks.NETHERRACK, 800);
+        addCookTime(Blocks.CLAY, 800);
+
+        addBurnTime(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.JUNGLE.getMetadata()), 800);
+        addBurnTime(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.SPRUCE.getMetadata()), 1200);
+        addBurnTime(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.BIRCH.getMetadata()), 2000);
+        addBurnTime(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.DARK_OAK.getMetadata() - 4), 1200);
+        addBurnTime("logWood", 1600);
+    }
+
     public static void addSawRecipe(Block block, int meta, ItemStack output) {
         addSawRecipe(block, meta, new ItemStack[]{output});
     }
@@ -686,5 +706,37 @@ public class BWCrafting {
 
     public static void addShapelessSteelAnvilRecipe(ItemStack result, Object... recipe) {
         CraftingManagerSteelAnvil.INSTANCE.addShapelessRecipe(result, recipe);
+    }
+
+    public static void addCookTime(Item item, int time) {
+        addCookTime(new ItemStack(item), time);
+    }
+
+    public static void addCookTime(Block block, int time) {
+        addCookTime(new ItemStack(block), time);
+    }
+
+    public static void addCookTime(ItemStack stack, int time) {
+        TileEntityFurnaceTweaks.registerCookTime(stack, time);
+    }
+
+    public static void addCookTime(String ore, int time) {
+        TileEntityFurnaceTweaks.registerCookTime(ore, time);
+    }
+
+    public static void addBurnTime(Item item, int time) {
+        addBurnTime(new ItemStack(item), time);
+    }
+
+    public static void addBurnTime(Block block, int time) {
+        addBurnTime(new ItemStack(block), time);
+    }
+
+    public static void addBurnTime(ItemStack stack, int time) {
+        TileEntityFurnaceTweaks.registerBurnTime(stack, time);
+    }
+
+    public static void addBurnTime(String ore, int time) {
+        TileEntityFurnaceTweaks.registerBurnTime(ore, time);
     }
 }

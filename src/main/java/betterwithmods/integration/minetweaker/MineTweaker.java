@@ -29,6 +29,7 @@ public class MineTweaker implements ICompatModule {
         MineTweakerAPI.registerClass(Buoyancy.class);
         MineTweakerAPI.registerClass(HopperFilter.class);
         MineTweakerAPI.registerClass(SteelAnvil.class);
+        MineTweakerAPI.registerClass(Furnace.class);
     }
 
     @Override

@@ -40,6 +40,8 @@ dependencies {
 
 jar {
     manifest {
+        attributes 'FMLCorePlugin': 'betterwithmods.asm.LoadingPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
         attributes 'FMLAT': 'bwm_at.cfg'
     }
 }
