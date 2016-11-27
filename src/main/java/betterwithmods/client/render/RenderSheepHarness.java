@@ -1,7 +1,7 @@
 package betterwithmods.client.render;
 
 import betterwithmods.BWMod;
-import betterwithmods.event.MobAIEvent;
+import betterwithmods.event.BreedingHardnessEvent;
 import net.minecraft.client.model.ModelSheep2;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSheep;
@@ -23,7 +23,7 @@ public class RenderSheepHarness extends RenderSheep {
 
     @Override
     protected ResourceLocation getEntityTexture(EntitySheep entity) {
-        if (MobAIEvent.getHarness(entity) != null)
+        if (BreedingHardnessEvent.getHarness(entity) != null)
             return HARNESS;
         return super.getEntityTexture(entity);
     }

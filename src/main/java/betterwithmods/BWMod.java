@@ -112,6 +112,8 @@ public class BWMod {
         MinecraftForge.EVENT_BUS.register(new EggImpactEvent());
         MinecraftForge.EVENT_BUS.register(new SaveSoupEvent());
         MinecraftForge.EVENT_BUS.register(new BlastingOilEvent());
+        MinecraftForge.EVENT_BUS.register(new BreedingHardnessEvent());
+        MinecraftForge.EVENT_BUS.register(new HardcoreEndermenEvent());
     }
 
     private static void registerEntities() {

@@ -5,11 +5,11 @@ import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.util.List;
 import java.util.Random;
 
-import static betterwithmods.event.MobAIEvent.isWillingToMate;
 
 public class EntityAIVillagerMate extends EntityAIBase {
     final World world;
@@ -132,4 +132,12 @@ public class EntityAIVillagerMate extends EntityAIBase {
     public boolean canMateWith(EntityVillager village, EntityVillager mate) {
         return village != mate && (isWillingToMate(villager) && isWillingToMate(mate));
     }
+
+    public static boolean isWillingToMate(EntityVillager villager) {
+        if (villager != null) {
+            return ReflectionHelper.getPrivateValue(EntityVillager.class, villager, "isWillingToMate", "field_175565_bs");
+        }
+        return false;
+    }
+
 }
