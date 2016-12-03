@@ -62,6 +62,7 @@ public class BWConfig {
     public static boolean hardcoreOres;
     public static boolean hardcoreStructures;
     public static boolean armorDrops;
+    public static boolean hardcoreBone;
 
     public static void init(File file) {
         config = new Configuration(file);
@@ -126,6 +127,7 @@ public class BWConfig {
         hardcoreRedstone = config.get(HARDCORE, "Hardcore Redstone",true,"Prevents wooden doors, trapdoors, and fence gates from being activated by redstone. Changes various redstone related recipes").setRequiresMcRestart(true).getBoolean();
         hardcoreOres = config.get(HARDCORE, "Hardcore Ores",true,"Makes ores only smelt to a single nugget if available").setRequiresMcRestart(true).getBoolean();
         hardcoreStructures = config.get(HARDCORE, "Hardcore Structures",true,"Changes various structures to be affected by the Hardcore Spawn radius. Removes Enchanting Table and Brewing Stand recipes").setRequiresMcRestart(true).getBoolean();
+        hardcoreBone = config.get(HARDCORE, "Hardcore Bone",true,"Bonemeal will fertilize farmland, and cannot be used on crops or trees").setRequiresMcRestart(true).getBoolean();
         config.save();
     }
 

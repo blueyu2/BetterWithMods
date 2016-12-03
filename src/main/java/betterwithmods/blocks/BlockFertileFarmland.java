@@ -1,6 +1,7 @@
 package betterwithmods.blocks;
 
 import net.minecraft.block.BlockFarmland;
+import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -26,12 +27,20 @@ public class BlockFertileFarmland extends BlockFarmland {
 
         IBlockState above = world.getBlockState(pos.up());
         if (above.getBlock() instanceof IPlantable && canSustainPlant(above, world, pos, EnumFacing.UP, (IPlantable) above.getBlock())) {
-            world.scheduleBlockUpdate(pos.up(), above.getBlock(), above.getBlock().tickRate(world), 5);
-            if (rand.nextInt(150) == 0) {
-                int meta = this.getMetaFromState(state);
-                world.setBlockState(pos, Blocks.FARMLAND.getDefaultState().withProperty(MOISTURE, meta & 7));
-            }
+            for (int i = 0; i < 2; i++)
+                above.getBlock().updateTick(world, pos.up(), above, rand);
+            if (isCropDone(world, pos.up(), above))
+                world.setBlockState(pos, Blocks.FARMLAND.getDefaultState().withProperty(MOISTURE, this.getMetaFromState(state) & 7));
         }
+    }
+
+    private boolean isCropDone(World world, BlockPos pos, IBlockState state) {
+        if (state.getBlock() instanceof BlockHemp && state.getValue(BlockHemp.AGE) == 7)
+            return true;
+        else if (state.getBlock() instanceof IGrowable && !((IGrowable) state.getBlock()).canGrow(world, pos, state, world.isRemote))
+            return true;
+
+        return false;
     }
 
     @Override

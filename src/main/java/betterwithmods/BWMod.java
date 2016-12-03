@@ -119,6 +119,7 @@ public class BWMod {
         MinecraftForge.EVENT_BUS.register(new HardcoreEndermenEvent());
         MinecraftForge.EVENT_BUS.register(new HardcoreRedstoneEvent());
         MinecraftForge.TERRAIN_GEN_BUS.register(new BWMWorldGenEvent());
+        MinecraftForge.EVENT_BUS.register(new HardcoreBoneEvent());
     }
 
     private static void registerEntities() {
