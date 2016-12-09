@@ -1,0 +1,23 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "top": "betterwithmods:blocks/vessel_bottom",
+      "bottom": "betterwithmods:blocks/vessel_bottom",
+      "side": "betterwithmods:blocks/vessel_side",
+      "bars": "betterwithmods:blocks/vessel_bars"
+    },
+    "model": "betterwithmods:vessel",
+    "uvlock": false
+  },
+  "variants": {
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {
+        "transform": "forge:default-block"
+      }
+    ]
+  }
+}

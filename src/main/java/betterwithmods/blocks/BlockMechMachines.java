@@ -302,6 +302,7 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
                 return dir != EnumFacing.DOWN && dir != EnumFacing.UP;
             case CRUCIBLE:
             case CAULDRON:
+            case VESSEL:
             case HOPPER:
                 return dir != EnumFacing.UP && dir != EnumFacing.DOWN;
             case TURNTABLE:
@@ -381,7 +382,7 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
         boolean isOn = world.getBlockState(pos).getValue(ISACTIVE);
         if (type == BlockMechMachines.EnumType.MILL && isOn)
             updateMill(world, pos, rand);
-        else if (!isOn && (type == BlockMechMachines.EnumType.CAULDRON || type == BlockMechMachines.EnumType.CRUCIBLE))
+        else if (!isOn && (type == BlockMechMachines.EnumType.CAULDRON || type == BlockMechMachines.EnumType.CRUCIBLE || type == BlockMechMachines.EnumType.VESSEL))
             updateCookingPot(world, pos, rand);
     }
 
@@ -500,7 +501,8 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
         CRUCIBLE(2, "crucible"),
         CAULDRON(3, "cauldron"),
         HOPPER(4, "hopper"),
-        TURNTABLE(5, "turntable", true);
+        TURNTABLE(5, "turntable", true),
+        VESSEL(6, "vessel");
 
         private static final BlockMechMachines.EnumType[] META_LOOKUP = new BlockMechMachines.EnumType[values().length];
 
