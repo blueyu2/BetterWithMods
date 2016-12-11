@@ -62,7 +62,8 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
                 "facing=up,ison=false,machinetype=crucible",
                 "facing=up,ison=false,machinetype=cauldron",
                 "facing=up,ison=false,machinetype=hopper",
-                "facing=up,ison=false,machinetype=turntable",};
+                "facing=up,ison=false,machinetype=turntable",
+                "facing=up,ison=false,machinetype=vessel",};
     }
 
     @SuppressWarnings("deprecation")
@@ -88,6 +89,7 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
             case CRUCIBLE:
                 return SoundType.GLASS;
             case CAULDRON:
+            case VESSEL:
                 return SoundType.METAL;
             default:
                 return super.getSoundType(state, world, pos, entity);
@@ -107,6 +109,7 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
             case 1:
             case 2:
             case 3:
+            case 6:
                 return 1;
             default:
                 return 10;
@@ -251,7 +254,7 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             list.add(new ItemStack(item, 1, i));
         }
     }

@@ -83,6 +83,16 @@
           "side": "betterwithmods:blocks/turntable_side",
           "particle": "#up"
         }
+      },
+      "vessel": {
+        "model": "betterwithmods:vessel",
+        "textures": {
+          "side": "betterwithmods:blocks/vessel_side",
+          "top": "betterwithmods:blocks/vessel_bottom",
+          "bottom": "betterwithmods:blocks/vessel_bottom",
+          "invfill": "betterwithmods:blocks/vessel_contents",
+          "bars": "betterwithmods:blocks/vessel_bars"
+        }
       }
     },
     "ison": {
