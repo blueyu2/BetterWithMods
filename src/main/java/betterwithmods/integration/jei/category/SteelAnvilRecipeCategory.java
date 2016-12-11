@@ -58,7 +58,7 @@ public class SteelAnvilRecipeCategory extends BlankRecipeCategory<ICraftingRecip
         stacks.init(craftOutputSlot, false, 112, 27);
 
         for (int y = 0; y < 4; y++) {
-            for(int x = 0; x < 4; x++) {
+            for (int x = 0; x < 4; x++) {
                 int index = craftInputSlot1 + x + (y * 4);
                 stacks.init(index, true, x * 18, y * 18);
             }
@@ -83,8 +83,7 @@ public class SteelAnvilRecipeCategory extends BlankRecipeCategory<ICraftingRecip
         int width, height;
         if (input.size() > 9) {
             width = height = 4;
-        }
-        else if (input.size() > 4) {
+        } else if (input.size() > 4) {
             width = height = 3;
         } else if (input.size() > 1) {
             width = height = 2;

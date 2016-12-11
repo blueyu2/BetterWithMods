@@ -30,9 +30,9 @@ public class TileEntityVase extends TileBasicInventory {
                 heldItem.stackSize -= 1;
                 playerIn.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, heldItem.stackSize == 0 ? null : heldItem);
             }
-            this.worldObj.playSound(null, pos.getX(), pos.getY(), pos.getZ(),
+            this.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                     SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F,
-                    ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
         }
 
         return flag;
@@ -42,9 +42,9 @@ public class TileEntityVase extends TileBasicInventory {
         ItemStack vaseitem = inventory.getStackInSlot(0);
         if (vaseitem != null && vaseitem.isItemEqual(ItemMaterial.getMaterial("blasting_oil"))) {
             float intensity = 1.5f; // TODO: fiddle with this.
-            worldObj.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), intensity, true);
+            getWorld().createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), intensity, true);
         } else {
-            InvUtils.ejectInventoryContents(worldObj, pos, getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null));
+            InvUtils.ejectInventoryContents(getWorld(), pos, getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null));
         }
     }
 

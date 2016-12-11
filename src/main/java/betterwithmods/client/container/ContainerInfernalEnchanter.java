@@ -69,8 +69,7 @@ public class ContainerInfernalEnchanter extends Container {
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
         for (IContainerListener listener : this.listeners) {
-            IContainerListener icontainerlistener = listener;
-            this.broadcastData(icontainerlistener);
+            this.broadcastData(listener);
         }
     }
 
@@ -162,8 +161,8 @@ public class ContainerInfernalEnchanter extends Container {
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack stack = handler.getStackInSlot(i);
 
-            if (stack != null && !playerIn.worldObj.isRemote)
-                InvUtils.ejectStack(playerIn.worldObj, playerIn.posX, playerIn.posY, playerIn.posZ, stack);
+            if (stack != null && !playerIn.getEntityWorld().isRemote)
+                InvUtils.ejectStack(playerIn.getEntityWorld(), playerIn.posX, playerIn.posY, playerIn.posZ, stack);
         }
     }
 

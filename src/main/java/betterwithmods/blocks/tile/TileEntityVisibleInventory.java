@@ -62,8 +62,8 @@ public abstract class TileEntityVisibleInventory extends TileEntityDirectional {
     public void onDataPacket(NetworkManager mgr, SPacketUpdateTileEntity pkt) {
         NBTTagCompound tag = pkt.getNbtCompound();
         readFromNBT(tag);
-        IBlockState state = worldObj.getBlockState(this.pos);
-        worldObj.notifyBlockUpdate(this.pos, state, state, 3);
+        IBlockState state = getWorld().getBlockState(this.pos);
+        getWorld().notifyBlockUpdate(this.pos, state, state, 3);
     }
 
     @Override

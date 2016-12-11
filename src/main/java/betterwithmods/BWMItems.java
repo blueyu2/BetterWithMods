@@ -10,7 +10,6 @@ import betterwithmods.items.*;
 import betterwithmods.items.tools.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.MobEffects;
@@ -240,7 +239,7 @@ public final class BWMItems {
 
     @SideOnly(Side.CLIENT)
     private static void registerMiniBlockNBT(ItemBlockMini item) {
-        if(Block.getBlockFromItem(item).getRegistryName().getResourcePath().startsWith("wood")) {
+        if (Block.getBlockFromItem(item).getRegistryName().getResourcePath().startsWith("wood")) {
             //TODO use more of the BlockPlanks.EnumType instead of metadata
             ModelLoader.setCustomMeshDefinition(item,
                     stack -> (stack.hasTagCompound() && stack.getTagCompound().hasKey("type")) ? new ModelResourceLocation(
@@ -258,8 +257,7 @@ public final class BWMItems {
                 resourceLocations[i] = new ModelResourceLocation(item.getRegistryName() + "_" + BlockPlanks.EnumType.byMetadata(i),
                         "inventory");
             ModelBakery.registerItemVariants(item, (ResourceLocation[]) resourceLocations);
-        }
-        else {
+        } else {
             ModelLoader.setCustomMeshDefinition(item,
                     stack -> (stack.hasTagCompound() && stack.getTagCompound().hasKey("type")) ? new ModelResourceLocation(
                             item.getRegistryName() + "_"

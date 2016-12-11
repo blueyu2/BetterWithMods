@@ -12,22 +12,48 @@
     "uvlock": true
   },
   "variants": {
-    "normal": [{
-      "submodel": {
-        "candle1": {  "model": "betterwithmods:infernal_candle"},
-        "candle2": {  "model": "betterwithmods:infernal_candle", "y":90},
-        "candle3": {  "model": "betterwithmods:infernal_candle", "y":180},
-        "candle4": {  "model": "betterwithmods:infernal_candle", "y":270}
+    "normal": [
+      {
+        "submodel": {
+          "candle1": {
+            "model": "betterwithmods:infernal_candle"
+          },
+          "candle2": {
+            "model": "betterwithmods:infernal_candle",
+            "y": 90
+          },
+          "candle3": {
+            "model": "betterwithmods:infernal_candle",
+            "y": 180
+          },
+          "candle4": {
+            "model": "betterwithmods:infernal_candle",
+            "y": 270
+          }
+        }
       }
-    }],
-    "inventory": [{
-      "transform": "forge:default-block",
-      "submodel": {
-        "candle1": { "model": "betterwithmods:infernal_candle"},
-        "candle2": { "model": "betterwithmods:infernal_candle", "y":90},
-        "candle3": { "model": "betterwithmods:infernal_candle", "y":180},
-        "candle4": { "model": "betterwithmods:infernal_candle", "y":270}
+    ],
+    "inventory": [
+      {
+        "transform": "forge:default-block",
+        "submodel": {
+          "candle1": {
+            "model": "betterwithmods:infernal_candle"
+          },
+          "candle2": {
+            "model": "betterwithmods:infernal_candle",
+            "y": 90
+          },
+          "candle3": {
+            "model": "betterwithmods:infernal_candle",
+            "y": 180
+          },
+          "candle4": {
+            "model": "betterwithmods:infernal_candle",
+            "y": 270
+          }
+        }
       }
-    }]
+    ]
   }
 }

@@ -151,7 +151,7 @@ public class BlockBellows extends BWMBlock implements IMechanicalBlock {
                     blow(world, pos);
                 } else
                     world.playSound(null, pos, BWSounds.BELLOW, SoundCategory.BLOCKS, 0.2F, world.rand.nextFloat() * 0.25F + 2.5F);
-                    liftCollidingEntities(world, pos);
+                liftCollidingEntities(world, pos);
             } else {
                 world.scheduleBlockUpdate(pos, this, tickRate(world), 5);
                 setTriggerMechanicalStateChange(world, pos, true);

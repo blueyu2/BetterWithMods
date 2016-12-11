@@ -20,13 +20,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import static net.minecraft.util.EnumFacing.AxisDirection;
-import static net.minecraft.util.EnumFacing.DOWN;
-import static net.minecraft.util.EnumFacing.EAST;
-import static net.minecraft.util.EnumFacing.NORTH;
-import static net.minecraft.util.EnumFacing.SOUTH;
-import static net.minecraft.util.EnumFacing.UP;
-import static net.minecraft.util.EnumFacing.WEST;
+import static net.minecraft.util.EnumFacing.*;
 
 /**
  * Created by tyler on 9/5/16.
@@ -94,7 +88,7 @@ public class EntityMiningCharge extends Entity {
         if (!this.hasNoGravity()) {
             this.motionY -= 0.03999999910593033D;
         }
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.move(this.motionX, this.motionY, this.motionZ);
 
 
         --this.fuse;
@@ -102,18 +96,18 @@ public class EntityMiningCharge extends Entity {
         if (this.fuse <= 0) {
             this.setDead();
 
-            if (!this.worldObj.isRemote) {
+            if (!this.getEntityWorld().isRemote) {
                 this.explode();
             }
         } else {
             this.handleWaterMovement();
-            this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.getEntityWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
         }
     }
 
     private void explode() {
-        this.worldObj.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
-        this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 1.0D, 0.0D, 0.0D);
+        this.getEntityWorld().playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.getEntityWorld().rand.nextFloat() - this.getEntityWorld().rand.nextFloat()) * 0.2F) * 0.7F);
+        this.getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 1.0D, 0.0D, 0.0D);
         BlockPos pos = getPosition();
         EnumFacing facing = this.facing.getOpposite();
         for (int k = 0; k <= 3; k++) {
@@ -122,23 +116,23 @@ public class EntityMiningCharge extends Entity {
                 for (int i = -1; i <= 1; i++) {
                     for (int j = -1; j <= 1; j++) {
                         if (facing == UP || facing == DOWN)
-                            explodeBlock(worldObj, pos.add(i, dir * k, j));
+                            explodeBlock(getEntityWorld(), pos.add(i, dir * k, j));
                         else if (facing == NORTH || facing == SOUTH)
-                            explodeBlock(worldObj, pos.add(i, j, dir * k));
+                            explodeBlock(getEntityWorld(), pos.add(i, j, dir * k));
                         else if (facing == EAST || facing == WEST)
-                            explodeBlock(worldObj, pos.add(dir * k, i, j));
+                            explodeBlock(getEntityWorld(), pos.add(dir * k, i, j));
                     }
                 }
             } else {
                 if (facing == UP || facing == DOWN)
-                    explodeBlock(worldObj, pos.add(0, dir * k, 0));
+                    explodeBlock(getEntityWorld(), pos.add(0, dir * k, 0));
                 else if (facing == NORTH || facing == SOUTH)
-                    explodeBlock(worldObj, pos.add(0, 0, dir * k));
+                    explodeBlock(getEntityWorld(), pos.add(0, 0, dir * k));
                 else if (facing == EAST || facing == WEST)
-                    explodeBlock(worldObj, pos.add(dir * k, 0, 0));
+                    explodeBlock(getEntityWorld(), pos.add(dir * k, 0, 0));
             }
         }
-        List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos).expand(5, 5, 5));
+        List<EntityLivingBase> entities = getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos).expand(5, 5, 5));
         entities.forEach(entity -> entity.attackEntityFrom(DamageSource.causeExplosionDamage(igniter), 45f));
     }
 

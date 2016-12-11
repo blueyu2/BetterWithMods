@@ -74,25 +74,25 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
 
     @Override
     public void update() {
-        if (this.worldObj.isRemote)
+        if (this.getWorld().isRemote)
             return;
 
-        if (this.worldObj.getBlockState(this.pos).getBlock() instanceof BlockMechMachines) {
-            BlockMechMachines block = (BlockMechMachines) this.worldObj.getBlockState(this.pos).getBlock();
-            if (block.isCurrentStateValid(worldObj, pos)) {
-                worldObj.scheduleBlockUpdate(pos, block, block.tickRate(worldObj), 5);
+        if (this.getWorld().getBlockState(this.pos).getBlock() instanceof BlockMechMachines) {
+            BlockMechMachines block = (BlockMechMachines) this.getWorld().getBlockState(this.pos).getBlock();
+            if (block.isCurrentStateValid(getWorld(), pos)) {
+                getWorld().scheduleBlockUpdate(pos, block, block.tickRate(getWorld()), 5);
             }
-            IBlockState state = this.worldObj.getBlockState(this.pos);
+            IBlockState state = this.getWorld().getBlockState(this.pos);
             boolean stateChanged = state.getValue(DirUtils.TILTING) != EnumFacing.getFront(facing);
-            if (this.worldObj != null && stateChanged) {
-                this.worldObj.notifyBlockUpdate(this.pos, state, state, 3);
+            if (this.getWorld() != null && stateChanged) {
+                this.getWorld().notifyBlockUpdate(this.pos, state, state, 3);
             }
             if (this.fireIntensity != getFireIntensity()) {
                 validateFireIntensity();
                 this.forceValidation = true;
             }
 
-            if (!block.isMechanicalOn(this.worldObj, this.pos)) {
+            if (!block.isMechanicalOn(this.getWorld(), this.pos)) {
                 this.facing = 1;
                 entityCollision();
                 if (this.fireIntensity > 0) {
@@ -120,12 +120,12 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
             } else {
                 this.cookCounter = 0;
                 EnumFacing power = EnumFacing.UP;
-                if (worldObj.getBlockState(pos).getValue(BlockMechMachines.ISACTIVE)) {
+                if (getWorld().getBlockState(pos).getValue(BlockMechMachines.ISACTIVE)) {
                     for (EnumFacing f : EnumFacing.HORIZONTALS) {
                         if (power != EnumFacing.UP) {
-                            MechanicalUtil.destoryHorizontalAxles(worldObj, getPos().offset(f));
+                            MechanicalUtil.destoryHorizontalAxles(getWorld(), getPos().offset(f));
                         }
-                        if (MechanicalUtil.isBlockPoweredByAxleOnSide(worldObj, pos, f) || MechanicalUtil.isPoweredByCrankOnSide(worldObj, pos, f)) {
+                        if (MechanicalUtil.isBlockPoweredByAxleOnSide(getWorld(), pos, f) || MechanicalUtil.isPoweredByCrankOnSide(getWorld(), pos, f)) {
                             power = f;
                         }
                     }
@@ -148,7 +148,7 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
             flag = captureDroppedItems();
         }
         if (flag) {
-            worldObj.scheduleBlockUpdate(pos, this.getBlockType(), this.getBlockType().tickRate(worldObj), 5);//this.getWorld().markBlockForUpdate(this.getPos());
+            getWorld().scheduleBlockUpdate(pos, this.getBlockType(), this.getBlockType().tickRate(getWorld()), 5);//this.getWorld().markBlockForUpdate(this.getPos());
             this.markDirty();
         }
     }
@@ -168,17 +168,17 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
     }
 
     private boolean captureDroppedItems() {
-        List<EntityItem> items = this.getCaptureItems(worldObj, getPos());
+        List<EntityItem> items = this.getCaptureItems(getWorld(), getPos());
         if (items.size() > 0) {
             boolean flag = false;
             for (EntityItem item : items) {
                 flag = putDropInInventoryAllSlots(inventory, item) || flag;
-                //this.worldObj.playSound((EntityPlayer)null, pos.getX(), pos.getY(),pos.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                //this.getWorld().playSound((EntityPlayer)null, pos.getX(), pos.getY(),pos.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
             }
             if (flag) {
-                this.worldObj.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                this.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 if (this.validateInventory()) {
-                    worldObj.scheduleBlockUpdate(pos, this.getBlockType(), this.getBlockType().tickRate(worldObj), 5);
+                    getWorld().scheduleBlockUpdate(pos, this.getBlockType(), this.getBlockType().tickRate(getWorld()), 5);
                 }
                 return true;
             }
@@ -199,11 +199,11 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
             BlockPos target = pos.offset(facing);
             ItemStack eject = new ItemStack(stack.getItem(), ejectStackSize, stack.getItemDamage());
             InvUtils.copyTags(eject, stack);
-            IBlockState targetState = worldObj.getBlockState(target);
-            boolean ejectIntoWorld = worldObj.isAirBlock(target) || targetState.getBlock().isReplaceable(worldObj, target) || !targetState.getMaterial().isSolid() || targetState.getBoundingBox(worldObj,target).maxY < 0.5d;
+            IBlockState targetState = getWorld().getBlockState(target);
+            boolean ejectIntoWorld = getWorld().isAirBlock(target) || targetState.getBlock().isReplaceable(getWorld(), target) || !targetState.getMaterial().isSolid() || targetState.getBoundingBox(getWorld(), target).maxY < 0.5d;
             if (ejectIntoWorld) {
-                this.worldObj.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.2F, ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                ejectStack(worldObj, target, facing, eject);
+                this.getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.2F, ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                ejectStack(getWorld(), target, facing, eject);
                 inventory.extractItem(index, ejectStackSize, false);
             }
         }
@@ -217,21 +217,21 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
         item.motionY = vec.getY() * velocity * 0.1;
         item.motionZ = (double) (vec.getZ() * velocity);
         item.setDefaultPickupDelay();
-        world.spawnEntityInWorld(item);
+        world.spawnEntity(item);
     }
 
     @Override
     public void markDirty() {
         super.markDirty();
         this.forceValidation = true;
-        if (this.worldObj != null) {
+        if (this.getWorld() != null) {
             validateInventory();
         }
     }
 
 
     public boolean isUseableByPlayer(EntityPlayer player) {
-        return this.worldObj.getTileEntity(this.pos) == this && player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
+        return this.getWorld().getTileEntity(this.pos) == this && player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
     public abstract void validateContents();
@@ -246,8 +246,8 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
                 for (int z = -1; z <= 1; z++) {
                     int yPos = -1;
                     BlockPos target = pos.add(x, yPos, z);
-                    Block block = this.worldObj.getBlockState(target).getBlock();
-                    int meta = this.worldObj.getBlockState(target).getBlock().damageDropped(this.worldObj.getBlockState(target));
+                    Block block = this.getWorld().getBlockState(target).getBlock();
+                    int meta = this.getWorld().getBlockState(target).getBlock().damageDropped(this.getWorld().getBlockState(target));
                     if (BWMHeatRegistry.get(block, meta) != null)
                         fireFactor += BWMHeatRegistry.get(block, meta).value;
                 }
@@ -315,8 +315,8 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
             expSize = 10.0F;
 
         InvUtils.clearInventory(inventory);
-        worldObj.setBlockToAir(pos);
-        worldObj.createExplosion(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, expSize, true);
+        getWorld().setBlockToAir(pos);
+        getWorld().createExplosion(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, expSize, true);
     }
 
     protected boolean attemptToCookNormal() {
@@ -337,7 +337,7 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
                         if (out != null) {
                             ItemStack stack = out.copy();
                             if (!InvUtils.addItemStackToInv(inventory, stack))
-                                InvUtils.ejectStackWithOffset(this.worldObj, this.pos.up(), stack);
+                                InvUtils.ejectStackWithOffset(this.getWorld(), this.pos.up(), stack);
                         }
                     }
                     return true;
@@ -362,17 +362,17 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
             this.occupiedSlots = currentSlots;
             stateChanged = true;
         }
-        if (worldObj != null && stateChanged) {
-            IBlockState state = worldObj.getBlockState(pos);
-            worldObj.notifyBlockUpdate(pos, state, state, 3);
+        if (getWorld() != null && stateChanged) {
+            IBlockState state = getWorld().getBlockState(pos);
+            getWorld().notifyBlockUpdate(pos, state, state, 3);
         }
         return stateChanged;
     }
 
     public int getFireIntensity() {
         BlockPos down = pos.down();
-        Block block = this.worldObj.getBlockState(down).getBlock();
-        int meta = block.damageDropped(this.worldObj.getBlockState(down));
+        Block block = this.getWorld().getBlockState(down).getBlock();
+        int meta = block.damageDropped(this.getWorld().getBlockState(down));
         BWMHeatSource source = BWMHeatRegistry.get(block, meta);
         if (source != null)
             return source.value;
@@ -381,8 +381,8 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
 
     private void validateFireIntensity() {
         BlockPos down = pos.down();
-        Block block = this.worldObj.getBlockState(down).getBlock();
-        int meta = block.damageDropped(this.worldObj.getBlockState(down));
+        Block block = this.getWorld().getBlockState(down).getBlock();
+        int meta = block.damageDropped(this.getWorld().getBlockState(down));
         BWMHeatSource source = BWMHeatRegistry.get(block, meta);
         if (source != null)
             fireIntensity = source.value;

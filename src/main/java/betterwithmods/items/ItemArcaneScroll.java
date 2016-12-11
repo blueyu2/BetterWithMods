@@ -39,7 +39,7 @@ public class ItemArcaneScroll extends Item {
     }
 
     @Override
-    public boolean isItemTool(ItemStack stack) {
+    public boolean isEnchantable(ItemStack stack) {
         return false;
     }
 

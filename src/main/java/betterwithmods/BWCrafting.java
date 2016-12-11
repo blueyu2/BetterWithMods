@@ -4,16 +4,8 @@ import betterwithmods.blocks.BlockUnfiredPottery.EnumPotteryType;
 import betterwithmods.blocks.BlockUrn;
 import betterwithmods.blocks.mini.BlockMini;
 import betterwithmods.config.BWConfig;
-import betterwithmods.craft.BlockMetaRecipe;
-import betterwithmods.craft.KilnInteraction;
-import betterwithmods.craft.OreStack;
-import betterwithmods.craft.SawInteraction;
-import betterwithmods.craft.TurntableInteraction;
-import betterwithmods.craft.bulk.CraftingManagerCauldron;
-import betterwithmods.craft.bulk.CraftingManagerCauldronStoked;
-import betterwithmods.craft.bulk.CraftingManagerCrucible;
-import betterwithmods.craft.bulk.CraftingManagerCrucibleStoked;
-import betterwithmods.craft.bulk.CraftingManagerMill;
+import betterwithmods.craft.*;
+import betterwithmods.craft.bulk.*;
 import betterwithmods.craft.steelanvil.CraftingManagerSteelAnvil;
 import betterwithmods.craft.steelanvil.ShapedSteelAnvilRecipe;
 import betterwithmods.items.ItemBark;
@@ -25,11 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemFishFood;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -276,16 +264,16 @@ public class BWCrafting {
         GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_BOOTS), "C C", "C C", 'C', ItemMaterial.getMaterial("chain_mail"));
         GameRegistry.addShapedRecipe(new ItemStack(BWMBlocks.STEEL_ANVIL), "SSS", " S ", "SSS", 'S', ItemMaterial.getMaterial("ingot_steel"));
 
-        if(BWConfig.hardcoreOres) {
-            RecipeUtils.removeRecipes(Items.COMPASS,0);
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.COMPASS)," N ","NRN"," N ", 'N',"nuggetIron",'R',"dustRedstone"));
-            RecipeUtils.removeRecipes(Items.CLOCK,0);
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.CLOCK)," N ","NQN"," N ", 'N',"nuggetGold",'Q',"gemQuartz"));
-            RecipeUtils.removeRecipes(Items.BUCKET,0);
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.BUCKET),"N N"," N ",'N',"nuggetIron"));
+        if (BWConfig.hardcoreOres) {
+            RecipeUtils.removeRecipes(Items.COMPASS, 0);
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.COMPASS), " N ", "NRN", " N ", 'N', "nuggetIron", 'R', "dustRedstone"));
+            RecipeUtils.removeRecipes(Items.CLOCK, 0);
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.CLOCK), " N ", "NQN", " N ", 'N', "nuggetGold", 'Q', "gemQuartz"));
+            RecipeUtils.removeRecipes(Items.BUCKET, 0);
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.BUCKET), "N N", " N ", 'N', "nuggetIron"));
         }
 
-        if(BWConfig.hardcoreStructures) {
+        if (BWConfig.hardcoreStructures) {
             RecipeUtils.removeRecipes(Blocks.ENCHANTING_TABLE);
             RecipeUtils.removeRecipes(Items.BREWING_STAND, 0);
         }
@@ -358,11 +346,11 @@ public class BWCrafting {
         addOreCauldronRecipe(new ItemStack(Items.DYE, 1, 2), new Object[]{"blockCactus"});
         addOreCauldronRecipe(ItemMaterial.getMaterial("filament"), new Object[]{"string", "dustGlowstone", "dustRedstone"});
         addOreCauldronRecipe(ItemMaterial.getMaterial("element"), new Object[]{Items.BLAZE_POWDER, "dustRedstone", "string"});
-
+        String[] barkNames = {"barkOak", "barkSpruce", "barkBirch", "barkJungle", "barkAcacia", "barkDarkOak"};
         for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values()) {
             int meta = type.getMetadata();
-            addOreCauldronRecipe(ItemMaterial.getMaterial("tanned_leather"), new Object[]{ItemMaterial.getMaterial("scoured_leather"), new ItemStack(BWMItems.BARK, ItemBark.getTanningStackSize(meta), meta)});
-            addOreCauldronRecipe(ItemMaterial.getMaterial("tanned_leather_cut", 2), new Object[]{ItemMaterial.getMaterial("scoured_leather_cut", 2), new ItemStack(BWMItems.BARK, ItemBark.getTanningStackSize(meta), meta)});
+            addOreCauldronRecipe(ItemMaterial.getMaterial("tanned_leather"), new Object[]{ItemMaterial.getMaterial("scoured_leather"), new OreStack(barkNames[meta], ItemBark.getTanningStackSize(meta))});
+            addOreCauldronRecipe(ItemMaterial.getMaterial("tanned_leather_cut", 2), new Object[]{ItemMaterial.getMaterial("scoured_leather_cut", 2), new OreStack(barkNames[meta], ItemBark.getTanningStackSize(meta))});
         }
         addCauldronRecipe(ItemMaterial.getMaterial("tanned_leather"), new ItemStack[]{ItemMaterial.getMaterial("scoured_leather"), ItemMaterial.getMaterial("dung")});
         addCauldronRecipe(ItemMaterial.getMaterial("tanned_leather_cut", 2), new ItemStack[]{ItemMaterial.getMaterial("scoured_leather_cut", 2), ItemMaterial.getMaterial("dung")});
@@ -448,14 +436,14 @@ public class BWCrafting {
     }
 
     private static void addHardcoreOreRecipes() {
-        if(BWConfig.hardcoreOres) {
+        if (BWConfig.hardcoreOres) {
             for (ItemStack ore : InvUtils.oreNames) {
                 ItemStack nugget = InvUtils.getMatchingSuffixStack(ore, "ore", "nugget");
                 if (nugget != null) {
                     RecipeUtils.removeFurnaceRecipe(ore);
                     FurnaceRecipes.instance().getSmeltingList().put(ore, nugget);
-                    List<ItemStack> dusts = InvUtils.getMatchingSuffix(ore,"ore","dust");
-                    if(dusts.size() > 0) {
+                    List<ItemStack> dusts = InvUtils.getMatchingSuffix(ore, "ore", "dust");
+                    if (dusts.size() > 0) {
                         dusts.forEach(RecipeUtils::removeFurnaceRecipe);
                         dusts.forEach(dust -> FurnaceRecipes.instance().getSmeltingList().put(dust, nugget));
                     }
@@ -497,7 +485,7 @@ public class BWCrafting {
         addStokedCrucibleRecipe(new ItemStack(Items.IRON_INGOT, 8, 0), new ItemStack[]{new ItemStack(Items.IRON_CHESTPLATE, 1, OreDictionary.WILDCARD_VALUE)});
         addStokedCrucibleRecipe(new ItemStack(Items.IRON_INGOT, 7, 0), new ItemStack[]{new ItemStack(Items.IRON_LEGGINGS, 1, OreDictionary.WILDCARD_VALUE)});
         addStokedCrucibleRecipe(new ItemStack(Items.IRON_INGOT, 2, 0), new ItemStack[]{new ItemStack(Items.IRON_DOOR)});
-        if(BWConfig.hardcoreOres) {
+        if (BWConfig.hardcoreOres) {
             addStokedCrucibleRecipe(new ItemStack(InvUtils.getOreNames("nuggetIron").get(0).getItem(), 3), new ItemStack[]{new ItemStack(Items.BUCKET)});
         } else {
             addStokedCrucibleRecipe(new ItemStack(Items.IRON_INGOT, 3), new ItemStack[]{new ItemStack(Items.BUCKET)});

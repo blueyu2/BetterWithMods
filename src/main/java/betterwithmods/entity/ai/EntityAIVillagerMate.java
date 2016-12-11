@@ -26,9 +26,16 @@ public class EntityAIVillagerMate extends EntityAIBase {
 
     public EntityAIVillagerMate(EntityVillager villager, double speedIn) {
         this.villager = villager;
-        this.world = villager.worldObj;
+        this.world = villager.getEntityWorld();
         this.moveSpeed = speedIn;
         this.setMutexBits(3);
+    }
+
+    public static boolean isWillingToMate(EntityVillager villager) {
+        if (villager != null) {
+            return ReflectionHelper.getPrivateValue(EntityVillager.class, villager, "isWillingToMate", "field_175565_bs");
+        }
+        return false;
     }
 
     /**
@@ -110,7 +117,7 @@ public class EntityAIVillagerMate extends EntityAIBase {
             baby.setLocationAndAngles(this.villager.posX, this.villager.posY, this.villager.posZ, 0.0F, 0.0F);
             boolean profession = world.rand.nextBoolean();
             baby.setProfession(profession ? villager.getProfessionForge() : mate.getProfessionForge());
-            this.world.spawnEntityInWorld(baby);
+            this.world.spawnEntity(baby);
             Random random = this.villager.getRNG();
 
             for (int i = 0; i < 7; ++i) {
@@ -124,20 +131,13 @@ public class EntityAIVillagerMate extends EntityAIBase {
             }
 
             if (this.world.getGameRules().getBoolean("doMobLoot")) {
-                this.world.spawnEntityInWorld(new EntityXPOrb(this.world, this.villager.posX, this.villager.posY, this.villager.posZ, random.nextInt(7) + 1));
+                this.world.spawnEntity(new EntityXPOrb(this.world, this.villager.posX, this.villager.posY, this.villager.posZ, random.nextInt(7) + 1));
             }
         }
     }
 
     public boolean canMateWith(EntityVillager village, EntityVillager mate) {
         return village != mate && (isWillingToMate(villager) && isWillingToMate(mate));
-    }
-
-    public static boolean isWillingToMate(EntityVillager villager) {
-        if (villager != null) {
-            return ReflectionHelper.getPrivateValue(EntityVillager.class, villager, "isWillingToMate", "field_175565_bs");
-        }
-        return false;
     }
 
 }

@@ -22,13 +22,13 @@ public class TileEntityInfernalEnchanter extends TileEntity implements ITickable
     @Override
     public void update() {
 
-        if (worldObj.getTotalWorldTime() % 20 == 0) {
+        if (getWorld().getTotalWorldTime() % 20 == 0) {
             bookcaseCount = 0;
             for (int x = -RADIUS; x <= RADIUS; x++) {
                 for (int y = -RADIUS; y <= RADIUS; y++) {
                     for (int z = -RADIUS; z <= RADIUS; z++) {
                         BlockPos pos = getPos().add(x, y, z);
-                        bookcaseCount += (ForgeHooks.getEnchantPower(worldObj, pos) > 0) ? 1 : 0;
+                        bookcaseCount += (ForgeHooks.getEnchantPower(getWorld(), pos) > 0) ? 1 : 0;
                     }
                 }
             }
@@ -38,12 +38,12 @@ public class TileEntityInfernalEnchanter extends TileEntity implements ITickable
             // bookcase * item.enchants + 1
 
         }
-        if (worldObj.getTotalWorldTime() % 5 == 0) {
+        if (getWorld().getTotalWorldTime() % 5 == 0) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-            worldObj.spawnParticle(EnumParticleTypes.FLAME, x + .125, y + .9, z + .125, 0, 0, 0);
-            worldObj.spawnParticle(EnumParticleTypes.FLAME, x + .875, y + .9, z + .125, 0, 0, 0);
-            worldObj.spawnParticle(EnumParticleTypes.FLAME, x + .875, y + .9, z + .875, 0, 0, 0);
-            worldObj.spawnParticle(EnumParticleTypes.FLAME, x + .125, y + .9, z + .875, 0, 0, 0);
+            getWorld().spawnParticle(EnumParticleTypes.FLAME, x + .125, y + .9, z + .125, 0, 0, 0);
+            getWorld().spawnParticle(EnumParticleTypes.FLAME, x + .875, y + .9, z + .125, 0, 0, 0);
+            getWorld().spawnParticle(EnumParticleTypes.FLAME, x + .875, y + .9, z + .875, 0, 0, 0);
+            getWorld().spawnParticle(EnumParticleTypes.FLAME, x + .125, y + .9, z + .875, 0, 0, 0);
         }
 
     }
@@ -80,8 +80,8 @@ public class TileEntityInfernalEnchanter extends TileEntity implements ITickable
     public void onDataPacket(NetworkManager mgr, SPacketUpdateTileEntity pkt) {
         NBTTagCompound tag = pkt.getNbtCompound();
         readFromNBT(tag);
-        IBlockState state = worldObj.getBlockState(this.pos);
-        worldObj.notifyBlockUpdate(this.pos, state, state, 3);
+        IBlockState state = getWorld().getBlockState(this.pos);
+        getWorld().notifyBlockUpdate(this.pos, state, state, 3);
     }
 
     @Override

@@ -325,6 +325,6 @@ public class BlockGearbox extends BWMBlock implements IMechanicalBlock, IMechani
 
     @Override
     public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos) {
-        return isGearboxOn(worldIn,pos) ? 15 : 0;
+        return isGearboxOn(worldIn, pos) ? 15 : 0;
     }
 }

@@ -56,7 +56,7 @@ public class HopperInteractions {
                 EntityItem soul = new EntityItem(world, item.lastTickPosX, item.lastTickPosY, item.lastTickPosZ, new ItemStack(Blocks.SOUL_SAND, stackSize));
                 if (!InvUtils.addItemStackToInv(hopper.inventory, soul.getEntityItem())) {
                     soul.setDefaultPickupDelay();
-                    world.spawnEntityInWorld(soul);
+                    world.spawnEntity(soul);
                 }
                 if (item.getEntityItem().stackSize < 1)
                     item.setDead();

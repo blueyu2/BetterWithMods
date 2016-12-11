@@ -24,10 +24,9 @@ import java.util.List;
  * Created by blueyu2 on 11/25/16.
  */
 public class SteelAnvilShapelessRecipeWrapper extends BlankRecipeWrapper implements ICraftingRecipeWrapper {
+    private static final double shapelessIconScale = 0.5;
     private final IJeiHelpers jeiHelpers;
     private final ShapelessOreRecipe recipe;
-
-    private static final double shapelessIconScale = 0.5;
     private final IDrawable shapelessIcon;
     private final HoverChecker shapelessIconHoverChecker;
 

@@ -120,12 +120,12 @@ public class BWConfig {
         lensRange = config.getInt("Lens Horizontal Range", Configuration.CATEGORY_GENERAL, 256, 32, 256, "Range that lens light will travel");
         rawEggDrop = config.get(VANILLA_TWEAKS, "Eggs Drop Raw Egg When Thrown", true).getBoolean();
         hardcoreDiamonds = config.get(HARDCORE, "Require Diamond Ingots", true, "Diamond tools and armor require diamond ingots to craft. Allows diamond tools and armor to be recycled in a crucible").setRequiresMcRestart(true).getBoolean();
-        dropsHempSeeds = config.getBoolean("Drop Hemp Seeds",MODPACK_TWEAKS,true,"Tall Grass Drops Hemp Seeds");
-        hardcoreLavaBuckets = hardcoreBuckets && config.getBoolean("Hardcore Lava Buckets",HARDCORE,true,"Makes lava buckets hot if you don't have a fire resistance potion");
-        hardcoreEndermen = config.getBoolean("Hardcore Endermen", HARDCORE,true,"Changes to Endermen AI that make them even more menacing");
-        hardcoreRedstone = config.get(HARDCORE, "Hardcore Redstone",true,"Prevents wooden doors, trapdoors, and fence gates from being activated by redstone. Changes various redstone related recipes").setRequiresMcRestart(true).getBoolean();
-        hardcoreOres = config.get(HARDCORE, "Hardcore Ores",true,"Makes ores only smelt to a single nugget if available").setRequiresMcRestart(true).getBoolean();
-        hardcoreStructures = config.get(HARDCORE, "Hardcore Structures",true,"Changes various structures to be affected by the Hardcore Spawn radius. Removes Enchanting Table and Brewing Stand recipes").setRequiresMcRestart(true).getBoolean();
+        dropsHempSeeds = config.getBoolean("Drop Hemp Seeds", MODPACK_TWEAKS, true, "Tall Grass Drops Hemp Seeds");
+        hardcoreLavaBuckets = hardcoreBuckets && config.getBoolean("Hardcore Lava Buckets", HARDCORE, true, "Makes lava buckets hot if you don't have a fire resistance potion");
+        hardcoreEndermen = config.getBoolean("Hardcore Endermen", HARDCORE, true, "Changes to Endermen AI that make them even more menacing");
+        hardcoreRedstone = config.get(HARDCORE, "Hardcore Redstone", true, "Prevents wooden doors, trapdoors, and fence gates from being activated by redstone. Changes various redstone related recipes").setRequiresMcRestart(true).getBoolean();
+        hardcoreOres = config.get(HARDCORE, "Hardcore Ores", true, "Makes ores only smelt to a single nugget if available").setRequiresMcRestart(true).getBoolean();
+        hardcoreStructures = config.get(HARDCORE, "Hardcore Structures", true, "Changes various structures to be affected by the Hardcore Spawn radius. Removes Enchanting Table and Brewing Stand recipes").setRequiresMcRestart(true).getBoolean();
         config.save();
     }
 

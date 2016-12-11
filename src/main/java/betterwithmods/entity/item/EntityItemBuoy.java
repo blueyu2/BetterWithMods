@@ -27,13 +27,13 @@ public class EntityItemBuoy extends EntityItem {
      * Wrapper around EntityItem.
      */
     public EntityItemBuoy(EntityItem orig) {
-        super(orig.worldObj, orig.posX, orig.posY, orig.posZ, orig.getEntityItem());
+        super(orig.getEntityWorld(), orig.posX, orig.posY, orig.posZ, orig.getEntityItem());
         NBTTagCompound originalData = new NBTTagCompound();
         orig.writeEntityToNBT(originalData);
         this.readEntityFromNBT(originalData);
 
         String thrower = orig.getThrower();
-        Entity entity = thrower == null ? null : orig.worldObj.getPlayerEntityByName(thrower);
+        Entity entity = thrower == null ? null : orig.getEntityWorld().getPlayerEntityByName(thrower);
         double tossSpeed = entity != null && entity.isSprinting() ? 2D : 1D;
 
         this.motionX = orig.motionX * tossSpeed;
@@ -92,7 +92,7 @@ public class EntityItemBuoy extends EntityItem {
             this.setDead();
         } else {
             // super.super.onUpdate() START
-            if (!this.worldObj.isRemote) {
+            if (!this.getEntityWorld().isRemote) {
                 this.setFlag(6, this.isGlowing());
             }
             this.onEntityUpdate();
@@ -113,19 +113,19 @@ public class EntityItemBuoy extends EntityItem {
 
             this.noClip = this.pushOutOfBlocks(this.posX,
                     (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            this.move(this.motionX, this.motionY, this.motionZ);
             boolean flag = (int) this.prevPosX != (int) this.posX || (int) this.prevPosY != (int) this.posY
                     || (int) this.prevPosZ != (int) this.posZ;
 
             if (flag || this.ticksExisted % 25 == 0) {
-                if (this.worldObj.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
+                if (this.getEntityWorld().getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
                     this.motionY = 0.20000000298023224D;
                     this.motionX = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
                     this.motionZ = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
                     this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
                 }
 
-                if (!this.worldObj.isRemote) {
+                if (!this.getEntityWorld().isRemote) {
                     superSearchForOtherItemsNearby();
                 }
             }
@@ -133,9 +133,9 @@ public class EntityItemBuoy extends EntityItem {
             float f = 0.98F;
 
             if (this.onGround) {
-                f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX),
-                        MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1,
-                        MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.98F;
+                f = this.getEntityWorld().getBlockState(new BlockPos(MathHelper.floor(this.posX),
+                        MathHelper.floor(this.getEntityBoundingBox().minY) - 1,
+                        MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.98F;
             }
 
             this.motionX *= (double) f;
@@ -154,7 +154,7 @@ public class EntityItemBuoy extends EntityItem {
 
             ItemStack item = this.getDataManager().get(getITEM()).orNull();
 
-            if (!this.worldObj.isRemote && this.getAge0() >= lifespan) {
+            if (!this.getEntityWorld().isRemote && this.getAge0() >= lifespan) {
                 int hook = net.minecraftforge.event.ForgeEventFactory.onItemExpire(this, item);
                 if (hook < 0)
                     this.setDead();
@@ -180,7 +180,7 @@ public class EntityItemBuoy extends EntityItem {
             AxisAlignedBB boundingBox = new AxisAlignedBB(getEntityBoundingBox().minX, low, getEntityBoundingBox().minZ,
                     getEntityBoundingBox().maxX, high, getEntityBoundingBox().maxZ);
 
-            if (!worldObj.isAABBInMaterial(boundingBox, Material.WATER)) {
+            if (!getEntityWorld().isAABBInMaterial(boundingBox, Material.WATER)) {
                 break;
             }
 
@@ -205,12 +205,12 @@ public class EntityItemBuoy extends EntityItem {
      * nearby entity.
      */
     private boolean isDrifted() {
-        int minX = MathHelper.floor_double(getEntityBoundingBox().minX);
-        int maxX = MathHelper.floor_double(getEntityBoundingBox().maxX + 1.0D);
-        int minY = MathHelper.floor_double(getEntityBoundingBox().minY);
-        int maxY = MathHelper.floor_double(getEntityBoundingBox().maxY + 1.0D);
-        int minZ = MathHelper.floor_double(getEntityBoundingBox().minZ);
-        int maxZ = MathHelper.floor_double(getEntityBoundingBox().maxZ + 1.0D);
+        int minX = MathHelper.floor(getEntityBoundingBox().minX);
+        int maxX = MathHelper.floor(getEntityBoundingBox().maxX + 1.0D);
+        int minY = MathHelper.floor(getEntityBoundingBox().minY);
+        int maxY = MathHelper.floor(getEntityBoundingBox().maxY + 1.0D);
+        int minZ = MathHelper.floor(getEntityBoundingBox().minZ);
+        int maxZ = MathHelper.floor(getEntityBoundingBox().maxZ + 1.0D);
 
         for (int x = minX; x < maxX; ++x) {
             for (int y = minY; y < maxY; ++y) {
@@ -229,7 +229,7 @@ public class EntityItemBuoy extends EntityItem {
      */
     private boolean checkBlockDrifting(int x, int y, int z) {
         for (int height = y - 1; height <= y + 1; height++) {
-            IBlockState blockState = worldObj.getBlockState(new BlockPos(x, height, z));
+            IBlockState blockState = getEntityWorld().getBlockState(new BlockPos(x, height, z));
             if (blockState.getBlock() == Blocks.FLOWING_WATER || blockState.getBlock() == Blocks.WATER) {
                 int meta = blockState.getBlock().getMetaFromState(blockState);
                 if (meta >= 8)

@@ -20,8 +20,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class HardcoreEndermenEvent {
     @SubscribeEvent
     public void onTeleport(EnderTeleportEvent evt) {
-        evt.getEntityLiving().worldObj.playSound(null,evt.getEntityLiving().getPosition(),SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.HOSTILE,1,1);
+        evt.getEntityLiving().getEntityWorld().playSound(null, evt.getEntityLiving().getPosition(), SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.HOSTILE, 1, 1);
     }
+
     @SubscribeEvent
     public void addEntityAI(EntityJoinWorldEvent evt) {
         if (evt.getEntity() instanceof EntityEnderman) {
@@ -29,7 +30,7 @@ public class HardcoreEndermenEvent {
                 EntityEnderman entity = (EntityEnderman) evt.getEntity();
                 entity.targetTasks.taskEntries.clear();
                 entity.targetTasks.addTask(1, new EndermanAgro(entity));
-                entity.targetTasks.addTask(2, new EntityAIHurtByTarget(entity, true, new Class[0]));
+                entity.targetTasks.addTask(2, new EntityAIHurtByTarget(entity, true));
                 entity.targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityEndermite.class, 10, true, false, mite -> ((EntityEndermite) mite).isSpawnedByPlayer()));
             }
         }

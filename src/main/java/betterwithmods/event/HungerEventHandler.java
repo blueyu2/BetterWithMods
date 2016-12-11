@@ -43,7 +43,7 @@ public class HungerEventHandler {
     @SubscribeEvent
     public void replaceHungerGui(RenderGameOverlayEvent.Pre event) {
         if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD) {
-            if (!(Minecraft.getMinecraft().thePlayer.getFoodStats() instanceof BWMFoodStats))
+            if (!(Minecraft.getMinecraft().player.getFoodStats() instanceof BWMFoodStats))
                 return;// Can happen for a moment when changing config
             event.setCanceled(true);
             if (guiHunger == null)
@@ -307,7 +307,7 @@ public class HungerEventHandler {
 			return;
 		if (!Minecraft.getMinecraft().isSingleplayer())
 			return;
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer player = Minecraft.getMinecraft().player;
 		if (BWConfig.hardcoreHunger)
 			applyFoodSystem(player);
 		else

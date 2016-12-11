@@ -132,7 +132,7 @@ public class BWMod {
     }
 
     private static void registerWorldGen() {
-        if(BWConfig.hardcoreStructures) {
+        if (BWConfig.hardcoreStructures) {
             MapGenStructureIO.registerStructure(BWMapGenScatteredFeature.Start.class, "BWTemple");
             MapGenStructureIO.registerStructureComponent(BWComponentScatteredFeaturePieces.DesertPyramid.class, "BWTeDP");
             MapGenStructureIO.registerStructureComponent(BWComponentScatteredFeaturePieces.JunglePyramid.class, "BWTeJP");

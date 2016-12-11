@@ -68,18 +68,18 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
 
     @Override
     public void update() {
-        if (!this.worldObj.isRemote) {
-            if (worldObj.getBlockState(pos).getBlock() != null && worldObj.getBlockState(pos).getBlock() instanceof BlockMechMachines && ((BlockMechMachines) worldObj.getBlockState(pos).getBlock()).isMechanicalOn(worldObj, pos)) {
-                //if(worldObj.getBlockState(pos).getValue(BlockMechMachines.SUBTYPE) != this.getSubtype())
-                //worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMechMachines.SUBTYPE, this.getSubtype()));
-                if (!asynchronous && worldObj.getTotalWorldTime() % (long) ticksToRotate[timerPos] == 0) {
-                    this.worldObj.playSound(null, pos, SoundEvents.BLOCK_WOOD_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.05F, 1.0F);
+        if (!this.getWorld().isRemote) {
+            if (getWorld().getBlockState(pos).getBlock() != null && getWorld().getBlockState(pos).getBlock() instanceof BlockMechMachines && ((BlockMechMachines) getWorld().getBlockState(pos).getBlock()).isMechanicalOn(getWorld(), pos)) {
+                //if(getWorld().getBlockState(pos).getValue(BlockMechMachines.SUBTYPE) != this.getSubtype())
+                //getWorld().setBlockState(pos, getWorld().getBlockState(pos).withProperty(BlockMechMachines.SUBTYPE, this.getSubtype()));
+                if (!asynchronous && getWorld().getTotalWorldTime() % (long) ticksToRotate[timerPos] == 0) {
+                    this.getWorld().playSound(null, pos, SoundEvents.BLOCK_WOOD_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.05F, 1.0F);
                     rotateTurntable();
                 } else if (asynchronous) {
                     rotationTime++;
                     if (rotationTime >= ticksToRotate[timerPos]) {
                         rotationTime = 0;
-                        this.worldObj.playSound(null, pos, SoundEvents.BLOCK_WOOD_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.05F, 1.0F);
+                        this.getWorld().playSound(null, pos, SoundEvents.BLOCK_WOOD_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.05F, 1.0F);
                         rotateTurntable();
                     }
                 }
@@ -95,19 +95,19 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
             }
         } else if (player.getHeldItemMainhand() == null && player.getHeldItemOffhand() == null) {
             advanceTimerPos();
-            worldObj.scheduleBlockUpdate(pos, this.getBlockType(), this.getBlockType().tickRate(worldObj), 5);
-            worldObj.playSound(null, pos, SoundEvents.BLOCK_WOOD_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.6F);
+            getWorld().scheduleBlockUpdate(pos, this.getBlockType(), this.getBlockType().tickRate(getWorld()), 5);
+            getWorld().playSound(null, pos, SoundEvents.BLOCK_WOOD_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.6F);
             return true;
         }
         return false;
     }
 
     public void toggleAsynchronous(EntityPlayer player) {
-        if (!this.worldObj.getGameRules().getBoolean("doDaylightCycle")) {
+        if (!this.getWorld().getGameRules().getBoolean("doDaylightCycle")) {
             if (!asynchronous) {
                 this.asynchronous = true;
             } else if (player != null) {
-                player.addChatComponentMessage(new TextComponentTranslation("message.bwm:async.unavailable"));
+                player.sendStatusMessage(new TextComponentTranslation("message.bwm:async.unavailable"));
             }
         } else {
             boolean isSneaking = player.isSneaking();
@@ -115,9 +115,9 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
             boolean async = !this.asynchronous;
             if ((!async && !isSneaking) || (async && isSneaking))
                 isOn = "disabled";
-            player.addChatComponentMessage(new TextComponentTranslation("message.bwm:async." + isOn));
+            player.sendStatusMessage(new TextComponentTranslation("message.bwm:async." + isOn));
             if (!isSneaking) {
-                this.worldObj.playSound(null, pos, SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.05F, 1.0F);
+                this.getWorld().playSound(null, pos, SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.05F, 1.0F);
                 this.asynchronous = async;
             }
         }
@@ -134,8 +134,8 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
     public void onDataPacket(NetworkManager mgr, SPacketUpdateTileEntity pkt) {
         NBTTagCompound tag = pkt.getNbtCompound();
         this.readFromNBT(tag);
-        IBlockState state = worldObj.getBlockState(this.pos);
-        this.worldObj.notifyBlockUpdate(this.pos, state, state, 3);
+        IBlockState state = getWorld().getBlockState(this.pos);
+        this.getWorld().notifyBlockUpdate(this.pos, state, state, 3);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
     }
 
     public void rotateTurntable() {
-        boolean reverse = ((BlockMechMachines) worldObj.getBlockState(pos).getBlock()).isRedstonePowered(worldObj, pos);
+        boolean reverse = ((BlockMechMachines) getWorld().getBlockState(pos).getBlock()).isRedstonePowered(getWorld(), pos);
 
         this.potteryRotated = false;
 
@@ -164,7 +164,7 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
         if (!potteryRotated)
             potteryRotation = 0;
 
-        worldObj.notifyBlockOfStateChange(pos, BWMBlocks.SINGLE_MACHINES);
+        getWorld().notifyBlockOfStateChange(pos, BWMBlocks.SINGLE_MACHINES);
     }
 
     public byte getTimerPos() {
@@ -179,48 +179,48 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
         timerPos++;
         if (timerPos > 3)
             timerPos = 0;
-        IBlockState state = worldObj.getBlockState(pos);
-        worldObj.notifyBlockUpdate(pos, state, state, 3);
+        IBlockState state = getWorld().getBlockState(pos);
+        getWorld().notifyBlockUpdate(pos, state, state, 3);
     }
 
     private boolean canBlockTransmitRotationHorizontally(BlockPos pos) {
-        Block target = worldObj.getBlockState(pos).getBlock();
+        Block target = getWorld().getBlockState(pos).getBlock();
 
         if (target instanceof ITurnable) {
-            return ((ITurnable) target).canRotateHorizontally(worldObj, pos);
+            return ((ITurnable) target).canRotateHorizontally(getWorld(), pos);
         }
         if (target == Blocks.GLASS || target == Blocks.STAINED_GLASS)
             return true;
         if (target instanceof BlockPistonBase) {
-            IBlockState state = worldObj.getBlockState(pos);
+            IBlockState state = getWorld().getBlockState(pos);
 
             return !state.getValue(BlockPistonBase.EXTENDED);
         }
         if (target == Blocks.PISTON_EXTENSION || target == Blocks.PISTON_HEAD)
             return false;
 
-        return this.worldObj.isBlockNormalCube(pos, false);
+        return this.getWorld().isBlockNormalCube(pos, false);
     }
 
     private boolean canBlockTransmitRotationVertically(BlockPos pos) {
-        Block target = worldObj.getBlockState(pos).getBlock();
+        Block target = getWorld().getBlockState(pos).getBlock();
 
         if (target instanceof ITurnable) {
-            return ((ITurnable) target).canRotateVertically(worldObj, pos);
+            return ((ITurnable) target).canRotateVertically(getWorld(), pos);
         }
         if (target == Blocks.GLASS)
             return true;
         if (target == Blocks.CLAY)
             return false;
         if (target instanceof BlockPistonBase) {
-            IBlockState state = worldObj.getBlockState(pos);
+            IBlockState state = getWorld().getBlockState(pos);
 
             return !state.getValue(BlockPistonBase.EXTENDED);
         }
         if (target == Blocks.PISTON_EXTENSION || target == Blocks.PISTON_HEAD)
             return false;
 
-        return this.worldObj.isBlockNormalCube(pos, false);
+        return this.getWorld().isBlockNormalCube(pos, false);
     }
 
     private void rotateBlocksAttached(BlockPos pos, boolean reverse) {
@@ -231,8 +231,8 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
         for (int i = 2; i < 6; i++) {
             BlockPos offset = pos.offset(EnumFacing.getFront(i));
 
-            Block block = worldObj.getBlockState(offset).getBlock();
-            IBlockState state = worldObj.getBlockState(offset);
+            Block block = getWorld().getBlockState(offset).getBlock();
+            IBlockState state = getWorld().getBlockState(offset);
             boolean attached = false;
 
             if (block instanceof BlockTorch) {
@@ -250,27 +250,27 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
             } else if (block == Blocks.WALL_SIGN) {
                 int meta = state.getValue(BlockWallSign.FACING).getIndex();
                 if (meta == i) {
-                    block.dropBlockAsItem(worldObj, offset, state, 0);
-                    this.worldObj.setBlockToAir(offset);
+                    block.dropBlockAsItem(getWorld(), offset, state, 0);
+                    this.getWorld().setBlockToAir(offset);
                 }
             } else if (block instanceof BlockButton) {
                 EnumFacing facing = state.getValue(BlockButton.FACING);
                 if ((facing == EnumFacing.getFront(i))) {
-                    block.dropBlockAsItem(worldObj, offset, state, 0);
-                    this.worldObj.setBlockToAir(offset);
+                    block.dropBlockAsItem(getWorld(), offset, state, 0);
+                    this.getWorld().setBlockToAir(offset);
                 }
             } else if (block == Blocks.LEVER) {
                 BlockLever.EnumOrientation facing = state.getValue(BlockLever.FACING);
                 if (facing.getFacing() == EnumFacing.getFront(i)) {
-                    block.dropBlockAsItem(worldObj, offset, state, 0);
-                    this.worldObj.setBlockToAir(offset);
+                    block.dropBlockAsItem(getWorld(), offset, state, 0);
+                    this.getWorld().setBlockToAir(offset);
                 }
             }
 
             if (attached) {
                 EnumFacing destFacing = DirUtils.rotateFacingAroundY(EnumFacing.getFront(i), reverse);
                 newBlocks[destFacing.ordinal() - 2] = block;
-                worldObj.setBlockToAir(offset);
+                getWorld().setBlockToAir(offset);
             }
         }
 
@@ -282,7 +282,7 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
                 int meta;
 
                 BlockPos offset = pos.offset(EnumFacing.getFront(facing));
-                IBlockState state = worldObj.getBlockState(offset);
+                IBlockState state = getWorld().getBlockState(offset);
                 if (block instanceof BlockTorch) {
                     int targetFacing = 0;
 
@@ -301,22 +301,22 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
                     state = ((BlockLadder) block).getStateFromMeta(meta);
                 }
 
-                if (worldObj.getBlockState(offset).getBlock().isReplaceable(worldObj, offset))
-                    worldObj.setBlockState(offset, state);
+                if (getWorld().getBlockState(offset).getBlock().isReplaceable(getWorld(), offset))
+                    getWorld().setBlockState(offset, state);
                 else {
                     EnumFacing oldFacing = DirUtils.rotateFacingAroundY(EnumFacing.getFront(facing), !reverse);
                     BlockPos oldPos = pos.offset(oldFacing);
-                    block.dropBlockAsItem(worldObj, oldPos, state, 0);
+                    block.dropBlockAsItem(getWorld(), oldPos, state, 0);
                 }
             }
         }
     }
 
     private void rotateBlock(BlockPos pos, boolean reverse) {
-        if (worldObj.isAirBlock(pos))
+        if (getWorld().isAirBlock(pos))
             return;
 
-        IBlockState state = worldObj.getBlockState(pos);
+        IBlockState state = getWorld().getBlockState(pos);
         ItemStack stack = new ItemStack(state.getBlock(), 1, state.getBlock().damageDropped(state));
         Block target = state.getBlock();
         Rotation rot = reverse ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
@@ -324,27 +324,27 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
         if (TurntableInteraction.INSTANCE.contains(stack) && TurntableInteraction.INSTANCE.getRecipe(stack) != null) {
             if (target instanceof ITurnable) {
                 ITurnable block = (ITurnable) target;
-                if (block.canRotateOnTurntable(worldObj, pos))
-                    block.rotateAroundYAxis(worldObj, pos, reverse);
+                if (block.canRotateOnTurntable(getWorld(), pos))
+                    block.rotateAroundYAxis(getWorld(), pos, reverse);
             } else if (state != state.withRotation(rot))
-                worldObj.setBlockState(pos, state.withRotation(rot));
+                getWorld().setBlockState(pos, state.withRotation(rot));
             rotateCraftable(state, (TurntableInteraction.TurntableRecipe) TurntableInteraction.INSTANCE.getRecipe(stack), pos, reverse);
             this.potteryRotated = true;
         } else if (target instanceof ITurnable) {
             ITurnable block = (ITurnable) target;
 
-            if (block.canRotateOnTurntable(worldObj, pos))
-                block.rotateAroundYAxis(worldObj, pos, reverse);
+            if (block.canRotateOnTurntable(getWorld(), pos))
+                block.rotateAroundYAxis(getWorld(), pos, reverse);
         } else {
             IBlockState newState = state.withRotation(rot);
             if (!(target instanceof BlockRailBase) && state != newState)
-                worldObj.setBlockState(pos, newState);
+                getWorld().setBlockState(pos, newState);
             else if (target instanceof BlockRailBase) {
                 BlockRailBase rail = (BlockRailBase) target;
                 BlockRailBase.EnumRailDirection dir = state.getValue(rail.getShapeProperty());
                 if (dir != BlockRailBase.EnumRailDirection.ASCENDING_NORTH && dir != BlockRailBase.EnumRailDirection.ASCENDING_EAST && dir != BlockRailBase.EnumRailDirection.ASCENDING_SOUTH && dir != BlockRailBase.EnumRailDirection.ASCENDING_WEST) {
                     if (state != newState)
-                        worldObj.setBlockState(pos, newState);
+                        getWorld().setBlockState(pos, newState);
                 }
             }
         }
@@ -356,14 +356,14 @@ public class TileEntityTurntable extends TileEntity implements IMechSubtype, ITi
         if (this.potteryRotation > 7) {
             if (!craft.getOutputs().isEmpty() && craft.getOutputs().size() > 0) {
                 for (ItemStack scrap : craft.getOutputs()) {
-                    InvUtils.ejectStackWithOffset(worldObj, pos.up(), scrap.copy());
+                    InvUtils.ejectStackWithOffset(getWorld(), pos.up(), scrap.copy());
                 }
             }
-            worldObj.setBlockState(pos, RecipeUtils.getStateFromStack(craft.getResult()));
+            getWorld().setBlockState(pos, RecipeUtils.getStateFromStack(craft.getResult()));
             this.potteryRotation = 0;
         }
-        this.worldObj.spawnParticle(EnumParticleTypes.BLOCK_DUST, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, Block.getStateId(input));
-        this.worldObj.playSound(null, pos, block.getSoundType(input, this.worldObj, pos, null).getPlaceSound(), SoundCategory.BLOCKS, 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.8F);
+        this.getWorld().spawnParticle(EnumParticleTypes.BLOCK_DUST, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, Block.getStateId(input));
+        this.getWorld().playSound(null, pos, block.getSoundType(input, this.getWorld(), pos, null).getPlaceSound(), SoundCategory.BLOCKS, 0.5F, getWorld().rand.nextFloat() * 0.1F + 0.8F);
     }
 
     @Override

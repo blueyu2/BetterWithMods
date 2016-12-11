@@ -30,7 +30,7 @@ public class BuoyancyEventHandler {
             EntityItemBuoy newEntity = new EntityItemBuoy(entityItem);
             entityItem.setDead();
             entityItem.setInfinitePickupDelay();
-            world.spawnEntityInWorld(newEntity);
+            world.spawnEntity(newEntity);
         }
     }
 }

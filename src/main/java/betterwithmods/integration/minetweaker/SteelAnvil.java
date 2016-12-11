@@ -44,9 +44,8 @@ public class SteelAnvil {
             Object[] obj = new Object[ing.length];
             for (int i = 0; i < ing.length; i++) {
                 if (ing[i] instanceof OreStack) {
-                    obj[i] = ((OreStack)ing[i]).getOreName();
-                }
-                else
+                    obj[i] = ((OreStack) ing[i]).getOreName();
+                } else
                     obj[i] = ing[i];
             }
             return obj;

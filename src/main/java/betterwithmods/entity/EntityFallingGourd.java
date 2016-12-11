@@ -45,9 +45,9 @@ public class EntityFallingGourd extends EntityFallingBlock {
             BlockPos blockpos1;
             if (this.fallTime++ == 0) {
                 blockpos1 = new BlockPos(this);
-                if (this.worldObj.getBlockState(blockpos1).getBlock() == block) {
-                    this.worldObj.setBlockToAir(blockpos1);
-                } else if (!this.worldObj.isRemote) {
+                if (this.getEntityWorld().getBlockState(blockpos1).getBlock() == block) {
+                    this.getEntityWorld().setBlockToAir(blockpos1);
+                } else if (!this.getEntityWorld().isRemote) {
                     this.setDead();
                     return;
                 }
@@ -57,15 +57,15 @@ public class EntityFallingGourd extends EntityFallingBlock {
                 this.motionY -= 0.03999999910593033D;
             }
 
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            this.move(this.motionX, this.motionY, this.motionZ);
             this.motionX *= 0.9800000190734863D;
             this.motionY *= 0.9800000190734863D;
             this.motionZ *= 0.9800000190734863D;
-            if (!this.worldObj.isRemote) {
+            if (!this.getEntityWorld().isRemote) {
                 blockpos1 = new BlockPos(this);
                 if (this.onGround) {
-                    IBlockState iblockstate = this.worldObj.getBlockState(blockpos1);
-                    if (this.worldObj.isAirBlock(new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ)) && BlockFalling.canFallThrough(this.worldObj.getBlockState(new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ)))) {
+                    IBlockState iblockstate = this.getEntityWorld().getBlockState(blockpos1);
+                    if (this.getEntityWorld().isAirBlock(new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ)) && BlockFalling.canFallThrough(this.getEntityWorld().getBlockState(new BlockPos(this.posX, this.posY - 0.009999999776482582D, this.posZ)))) {
                         this.onGround = false;
                         return;
                     }
@@ -74,16 +74,16 @@ public class EntityFallingGourd extends EntityFallingBlock {
                     this.motionZ *= 0.699999988079071D;
                     this.motionY *= -0.5D;
                     if (iblockstate.getBlock() != Blocks.PISTON_EXTENSION) {
-                        if (this.worldObj.canBlockBePlaced(block, blockpos1, true, EnumFacing.UP, null, null) && !BlockFalling.canFallThrough(this.worldObj.getBlockState(blockpos1.down())) && (10 + rand.nextInt(7)) > this.fallTime && this.worldObj.setBlockState(blockpos1, fallblock, 3)) {
+                        if (this.getEntityWorld().canBlockBePlaced(block, blockpos1, true, EnumFacing.UP, null, null) && !BlockFalling.canFallThrough(this.getEntityWorld().getBlockState(blockpos1.down())) && (10 + rand.nextInt(7)) > this.fallTime && this.getEntityWorld().setBlockState(blockpos1, fallblock, 3)) {
                             this.setDead();
                             if (block instanceof BlockFalling) {
-                                ((BlockFalling) block).onEndFalling(this.worldObj, blockpos1);
+                                ((BlockFalling) block).onEndFalling(this.getEntityWorld(), blockpos1);
                             }
                         } else {
                             this.shatter();
                         }
                     }
-                } else if (this.fallTime > 100 && !this.worldObj.isRemote && (blockpos1.getY() < 1 || blockpos1.getY() > 256) || this.fallTime > 600) {
+                } else if (this.fallTime > 100 && !this.getEntityWorld().isRemote && (blockpos1.getY() < 1 || blockpos1.getY() > 256) || this.fallTime > 600) {
                     this.shatter();
                 }
             }
@@ -97,15 +97,15 @@ public class EntityFallingGourd extends EntityFallingBlock {
 
     public void shatter() {
         //TODO: This needs to make a splash sound
-        if (!worldObj.isRemote) {
+        if (!getEntityWorld().isRemote) {
             IBlockState fallblock = getBlock();
             if (fallblock != null)
-                worldObj.playEvent(2001, new BlockPos(this), Block.getStateId(fallblock));
+                getEntityWorld().playEvent(2001, new BlockPos(this), Block.getStateId(fallblock));
 
             if (seedStack != null) {
                 ItemStack seeds = seedStack.copy();
                 seeds.stackSize = rand.nextInt(3) + 1;
-                if (this.shouldDropItem && this.worldObj.getGameRules().getBoolean("doEntityDrops")) {
+                if (this.shouldDropItem && this.getEntityWorld().getGameRules().getBoolean("doEntityDrops")) {
                     this.entityDropItem(seeds, 0.0F);
                 }
             }

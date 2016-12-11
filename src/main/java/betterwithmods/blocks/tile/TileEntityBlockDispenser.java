@@ -57,9 +57,9 @@ public class TileEntityBlockDispenser extends TileBasicInventory {
         if (firstSlot > -1) {
             this.inventory.setStackInSlot(firstSlot, stack);
         } else {
-            EntityItem item = new EntityItem(worldObj, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
+            EntityItem item = new EntityItem(getWorld(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
             item.setDefaultPickupDelay();
-            worldObj.spawnEntityInWorld(item);
+            getWorld().spawnEntity(item);
         }
     }
 

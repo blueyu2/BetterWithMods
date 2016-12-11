@@ -27,12 +27,12 @@ public class EggImpactEvent {
             event.setCanceled(true);
             RayTraceResult result = event.getRayTraceResult();
             EntityThrowable egg = event.getEntityThrowable();
-            Random rand = egg.worldObj.rand;
+            Random rand = egg.getEntityWorld().rand;
             if (result.entityHit != null) {
                 result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(egg, egg.getThrower()), 0.0F);
             }
 
-            if (!egg.worldObj.isRemote) {
+            if (!egg.getEntityWorld().isRemote) {
                 if (rand.nextInt(8) == 0) {
                     int i = 1;
 
@@ -41,21 +41,21 @@ public class EggImpactEvent {
                     }
 
                     for (int j = 0; j < i; ++j) {
-                        EntityChicken entitychicken = new EntityChicken(egg.worldObj);
+                        EntityChicken entitychicken = new EntityChicken(egg.getEntityWorld());
                         entitychicken.setGrowingAge(-24000);
                         entitychicken.setLocationAndAngles(egg.posX, egg.posY, egg.posZ, egg.rotationYaw, 0.0F);
-                        egg.worldObj.spawnEntityInWorld(entitychicken);
+                        egg.getEntityWorld().spawnEntity(entitychicken);
                     }
                 } else {
-                    InvUtils.ejectStack(egg.worldObj, egg.posX, egg.posY, egg.posZ, new ItemStack(BWMItems.RAW_EGG));
+                    InvUtils.ejectStack(egg.getEntityWorld(), egg.posX, egg.posY, egg.posZ, new ItemStack(BWMItems.RAW_EGG));
                 }
             }
 
             for (int k = 0; k < 8; ++k) {
-                egg.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, egg.posX, egg.posY, egg.posZ, ((double) rand.nextFloat() - 0.5D) * 0.08D, ((double) rand.nextFloat() - 0.5D) * 0.08D, ((double) rand.nextFloat() - 0.5D) * 0.08D, Item.getIdFromItem(Items.EGG));
+                egg.getEntityWorld().spawnParticle(EnumParticleTypes.ITEM_CRACK, egg.posX, egg.posY, egg.posZ, ((double) rand.nextFloat() - 0.5D) * 0.08D, ((double) rand.nextFloat() - 0.5D) * 0.08D, ((double) rand.nextFloat() - 0.5D) * 0.08D, Item.getIdFromItem(Items.EGG));
             }
 
-            if (!egg.worldObj.isRemote) {
+            if (!egg.getEntityWorld().isRemote) {
                 egg.setDead();
             }
         }

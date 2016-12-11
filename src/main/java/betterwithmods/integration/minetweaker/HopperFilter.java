@@ -36,6 +36,7 @@ public class HopperFilter {
             super("hopperfilter");
             HopperFilters.addFilter(filter, allowed);
         }
+
         @Override
         public boolean canUndo() {
             return false;

@@ -33,7 +33,7 @@ public class BlastingOilEvent {
             }
             if (count > 0) {
                 living.attackEntityFrom(BLAST_OIL, Float.MAX_VALUE);
-                living.worldObj.createExplosion(null, living.posX, living.posY + living.height / 16, living.posZ, (float) (Math.sqrt(count / 5) / 2.5 + 1), true);
+                living.getEntityWorld().createExplosion(null, living.posX, living.posY + living.height / 16, living.posZ, (float) (Math.sqrt(count / 5) / 2.5 + 1), true);
             }
         }
     }

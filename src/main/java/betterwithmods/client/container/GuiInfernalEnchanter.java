@@ -44,7 +44,7 @@ public class GuiInfernalEnchanter extends GuiContainer {
             int val = container.enchantLevels[i];
             if (val != 0) {
                 int color = 0x407F10;
-                if (mc.thePlayer.experienceLevel >= val) {
+                if (mc.player.experienceLevel >= val) {
                     int y = yPos + 17 + (19 * i);
                     drawTexturedModalRect(xPos + 60, y, 0, 211, 108, 19);
                     color = 0x80FF20;

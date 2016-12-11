@@ -14,24 +14,14 @@ import betterwithmods.potion.BWPotion;
 import betterwithmods.util.DispenserBehaviorDynamite;
 import betterwithmods.util.InvUtils;
 import betterwithmods.util.NetherSpawnWhitelist;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.BlockGravel;
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.BlockSand;
-import net.minecraft.block.BlockTorch;
+import net.minecraft.block.*;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemFishFood;
-import net.minecraft.item.ItemSeeds;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
@@ -58,7 +48,7 @@ public class BWRegistry {
         registerBlockDispenserBehavior();
         registerHopperFilters();
 
-        if(BWConfig.dropsHempSeeds) {
+        if (BWConfig.dropsHempSeeds) {
             MinecraftForge.addGrassSeed(new ItemStack(BWMBlocks.HEMP, 1, 0), 5);
         }
     }
@@ -106,7 +96,7 @@ public class BWRegistry {
                     EntityMiningCharge miningCharge = new EntityMiningCharge(worldIn, pos.getX() + 0.5F, pos.getY(),
                             pos.getZ() + 0.5F, null, facing);
                     miningCharge.setNoGravity(false);
-                    worldIn.spawnEntityInWorld(miningCharge);
+                    worldIn.spawnEntity(miningCharge);
                     worldIn.playSound(null, miningCharge.posX, miningCharge.posY, miningCharge.posZ,
                             SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     return stack;
@@ -146,8 +136,14 @@ public class BWRegistry {
 
         OreDictionary.registerOre("blockSoulforgedSteel", new ItemStack(BWMBlocks.AESTHETIC, 1, 2));
         OreDictionary.registerOre("blockHellfire", new ItemStack(BWMBlocks.AESTHETIC, 1, 3));
-
+        //Added bark subtype entries for Roots compatibility
         OreDictionary.registerOre("barkWood", new ItemStack(BWMItems.BARK, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("barkOak", new ItemStack(BWMItems.BARK, 1, 0));
+        OreDictionary.registerOre("barkSpruce", new ItemStack(BWMItems.BARK, 1, 1));
+        OreDictionary.registerOre("barkBirch", new ItemStack(BWMItems.BARK, 1, 2));
+        OreDictionary.registerOre("barkJungle", new ItemStack(BWMItems.BARK, 1, 3));
+        OreDictionary.registerOre("barkAcacia", new ItemStack(BWMItems.BARK, 1, 4));
+        OreDictionary.registerOre("barkDarkOak", new ItemStack(BWMItems.BARK, 1, 5));
         OreDictionary.registerOre("craftingToolKnife", new ItemStack(BWMItems.KNIFE, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre("slabWood", new ItemStack(BWMBlocks.WOOD_SIDING, 1, OreDictionary.WILDCARD_VALUE));
         // TFC compatibility

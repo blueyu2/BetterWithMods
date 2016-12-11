@@ -34,7 +34,7 @@ public class HopperRecipeWrapper extends BlankRecipeWrapper {
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInputs(ItemStack.class, Stream.concat(outputs.stream(),filter.stream()).collect(Collectors.toList()));
+        ingredients.setInputs(ItemStack.class, Stream.concat(outputs.stream(), filter.stream()).collect(Collectors.toList()));
         ingredients.setOutputs(ItemStack.class, outputs);
     }
 }

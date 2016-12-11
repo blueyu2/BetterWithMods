@@ -21,11 +21,7 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemShears;
-import net.minecraft.item.ItemSword;
-import net.minecraft.item.ItemBow;
+import net.minecraft.item.*;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
@@ -73,7 +69,7 @@ public class MobDropEvent {
 
     @SubscribeEvent
     public void mobDungProduction(LivingEvent.LivingUpdateEvent evt) {
-        if (evt.getEntityLiving().worldObj.isRemote)
+        if (evt.getEntityLiving().getEntityWorld().isRemote)
             return;
 
         if (!BWConfig.produceDung)
@@ -82,9 +78,9 @@ public class MobDropEvent {
         if (evt.getEntityLiving() instanceof EntityAnimal) {
             EntityAnimal animal = (EntityAnimal) evt.getEntityLiving();
             if (animal instanceof EntityWolf) {
-                if (!animal.worldObj.canSeeSky(animal.getPosition())) {
+                if (!animal.getEntityWorld().canSeeSky(animal.getPosition())) {
                     if (animal.getGrowingAge() > 99) {
-                        int light = animal.worldObj.getLight(animal.getPosition());
+                        int light = animal.getEntityWorld().getLight(animal.getPosition());
                         if (animal.getGrowingAge() == fearLevel[light]) {
                             evt.getEntityLiving().entityDropItem(new ItemStack(BWMItems.MATERIAL, 1, 5), 0.0F);
                             animal.setGrowingAge(99);
@@ -107,17 +103,17 @@ public class MobDropEvent {
     @SubscribeEvent
     public void mobDiesBySaw(LivingDropsEvent evt) {
         BlockPos pos = evt.getEntityLiving().getPosition().down();
-        if (isChoppingBlock(evt.getEntityLiving().worldObj, pos) || isBattleAxe(evt.getEntityLiving())) {
+        if (isChoppingBlock(evt.getEntityLiving().getEntityWorld(), pos) || isBattleAxe(evt.getEntityLiving())) {
             if (!(evt.getEntityLiving() instanceof EntityPlayer)) {
                 for (EntityItem item : evt.getDrops()) {
                     ItemStack stack = item.getEntityItem();
-                    if (stack.getMaxStackSize() != 1 && evt.getEntity().worldObj.rand.nextBoolean())
+                    if (stack.getMaxStackSize() != 1 && evt.getEntity().getEntityWorld().rand.nextBoolean())
                         item.setEntityItemStack(new ItemStack(stack.getItem(), stack.stackSize + 1, stack.getItemDamage()));
                 }
             }
             if (evt.getEntityLiving() instanceof EntityAgeable)
                 addDrop(evt, new ItemStack(BWMItems.MATERIAL, 1, 5));
-            int headChance = evt.getEntityLiving().worldObj.rand.nextInt(12);
+            int headChance = evt.getEntityLiving().getEntityWorld().rand.nextInt(12);
             if (headChance < 5) {
                 if (evt.getEntityLiving() instanceof EntitySkeleton) {
                     EntitySkeleton skeltal = (EntitySkeleton) evt.getEntityLiving();
@@ -160,9 +156,9 @@ public class MobDropEvent {
     public void mobDrops(LivingDropsEvent evt) {
         if (BWConfig.armorDrops) {
             if (evt.getEntity() instanceof EntityZombie || evt.getEntity() instanceof EntitySkeleton) {
-                EntityMob mob = (EntityMob)evt.getEntity();
+                EntityMob mob = (EntityMob) evt.getEntity();
                 List<ItemStack> drops = new ArrayList<>();
-                for(EntityItem item : evt.getDrops()) {
+                for (EntityItem item : evt.getDrops()) {
                     if (item.getEntityItem() != null) {
                         drops.add(item.getEntityItem().copy());
                     }
@@ -195,8 +191,7 @@ public class MobDropEvent {
         if (mob instanceof EntitySkeleton) {
             if (item instanceof ItemBow || item instanceof ItemSword)
                 return stack.hasTagCompound();
-        }
-        else if (mob instanceof EntityPigZombie) {
+        } else if (mob instanceof EntityPigZombie) {
             if (item == Items.GOLDEN_SWORD) {
                 return stack.hasTagCompound();
             }
@@ -205,14 +200,14 @@ public class MobDropEvent {
     }
 
     private void createDamagedItem(LivingDropsEvent evt, ItemStack stack) {
-        if(stack.isItemStackDamageable()) {
-            stack.setItemDamage((int)(rand.nextFloat() * stack.getMaxDamage()));
+        if (stack.isItemStackDamageable()) {
+            stack.setItemDamage((int) (rand.nextFloat() * stack.getMaxDamage()));
         }
         addDrop(evt, stack);
     }
 
     public void addDrop(LivingDropsEvent evt, ItemStack drop) {
-        EntityItem item = new EntityItem(evt.getEntityLiving().worldObj, evt.getEntityLiving().posX, evt.getEntityLiving().posY, evt.getEntityLiving().posZ, drop);
+        EntityItem item = new EntityItem(evt.getEntityLiving().getEntityWorld(), evt.getEntityLiving().posX, evt.getEntityLiving().posY, evt.getEntityLiving().posZ, drop);
         item.setDefaultPickupDelay();
         evt.getDrops().add(item);
     }
@@ -230,7 +225,7 @@ public class MobDropEvent {
                     e.getWorld().playSound(null, shearedCreeper.posX, shearedCreeper.posY, shearedCreeper.posZ, SoundEvents.ENTITY_SLIME_JUMP, SoundCategory.HOSTILE, 1, 0.3F);
                     e.getWorld().playSound(null, shearedCreeper.posX, shearedCreeper.posY, shearedCreeper.posZ, SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.HOSTILE, 1, 1F);
                     creeper.setDead();
-                    e.getWorld().spawnEntityInWorld(shearedCreeper);
+                    e.getWorld().spawnEntity(shearedCreeper);
                 }
             }
         }

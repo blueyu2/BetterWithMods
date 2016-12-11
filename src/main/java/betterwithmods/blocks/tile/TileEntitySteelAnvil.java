@@ -3,12 +3,10 @@ package betterwithmods.blocks.tile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 
@@ -29,8 +27,7 @@ public class TileEntitySteelAnvil extends TileEntity implements IInventory, ISid
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        for (int i = 0; i < matrix.length; i++)
-        {
+        for (int i = 0; i < matrix.length; i++) {
             if (matrix[i] != null)
                 nbt.setTag("matrix" + i, matrix[i].writeToNBT(new NBTTagCompound()));
             else
@@ -47,7 +44,7 @@ public class TileEntitySteelAnvil extends TileEntity implements IInventory, ISid
     @Nullable
     @Override
     public ItemStack getStackInSlot(int index) {
-        if(index < matrix.length)
+        if (index < matrix.length)
             return matrix[index];
         return null;
     }
@@ -55,12 +52,10 @@ public class TileEntitySteelAnvil extends TileEntity implements IInventory, ISid
     @Nullable
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        if(index < matrix.length)
-        {
-            if(matrix[index] != null)
-            {
+        if (index < matrix.length) {
+            if (matrix[index] != null) {
                 ItemStack split = matrix[index].splitStack(count);
-                if(matrix[index].stackSize <= 0)
+                if (matrix[index].stackSize <= 0)
                     matrix[index] = null;
                 return split;
             }
@@ -71,9 +66,8 @@ public class TileEntitySteelAnvil extends TileEntity implements IInventory, ISid
     @Nullable
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        if(index < matrix.length)
-        {
-            if(matrix[index] != null){
+        if (index < matrix.length) {
+            if (matrix[index] != null) {
                 ItemStack ingredient = matrix[index];
                 matrix[index] = null;
                 return ingredient;
@@ -84,7 +78,7 @@ public class TileEntitySteelAnvil extends TileEntity implements IInventory, ISid
 
     @Override
     public void setInventorySlotContents(int index, @Nullable ItemStack stack) {
-        if(index < matrix.length)
+        if (index < matrix.length)
             matrix[index] = stack;
     }
 
@@ -94,15 +88,17 @@ public class TileEntitySteelAnvil extends TileEntity implements IInventory, ISid
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return this.worldObj.getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
+    public boolean isUsableByPlayer(EntityPlayer player) {
+        return this.getWorld().getTileEntity(pos) == this && player.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {}
+    public void openInventory(EntityPlayer player) {
+    }
 
     @Override
-    public void closeInventory(EntityPlayer player) {}
+    public void closeInventory(EntityPlayer player) {
+    }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
@@ -115,7 +111,8 @@ public class TileEntitySteelAnvil extends TileEntity implements IInventory, ISid
     }
 
     @Override
-    public void setField(int id, int value) {}
+    public void setField(int id, int value) {
+    }
 
     @Override
     public int getFieldCount() {

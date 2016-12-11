@@ -23,7 +23,7 @@ public class CraftingManagerSteelAnvil {
         return craft;
     }
 
-    public ShapelessOreRecipe addShapelessRecipe(ItemStack result, Object ... ingredients){
+    public ShapelessOreRecipe addShapelessRecipe(ItemStack result, Object... ingredients) {
         ShapelessOreRecipe recipe = new ShapelessOreRecipe(result, ingredients);
         recipes.add(recipe);
         return recipe;
@@ -31,17 +31,16 @@ public class CraftingManagerSteelAnvil {
 
     public void removeRecipe(ItemStack result) {
         List<IRecipe> toRemove = new ArrayList<>();
-        for(IRecipe recipe : this.recipes) {
+        for (IRecipe recipe : this.recipes) {
             if (OreDictionary.itemMatches(recipe.getRecipeOutput(), result, true)) {
                 toRemove.add(recipe);
             }
         }
-        for(IRecipe recipe: toRemove)
+        for (IRecipe recipe : toRemove)
             this.recipes.remove(recipe);
     }
 
-    public ItemStack findMatchingRecipe(InventoryCrafting matrix, World world)
-    {
+    public ItemStack findMatchingRecipe(InventoryCrafting matrix, World world) {
         for (IRecipe recipe : this.recipes) {
             if (recipe.matches(matrix, world)) {
                 return recipe.getCraftingResult(matrix);
@@ -51,28 +50,23 @@ public class CraftingManagerSteelAnvil {
         return null;
     }
 
-    public ItemStack[] getRemainingItems(InventoryCrafting craftMatrix, World worldIn)
-    {
-        for (IRecipe recipe : this.recipes)
-        {
-            if (recipe.matches(craftMatrix, worldIn))
-            {
+    public ItemStack[] getRemainingItems(InventoryCrafting craftMatrix, World worldIn) {
+        for (IRecipe recipe : this.recipes) {
+            if (recipe.matches(craftMatrix, worldIn)) {
                 return recipe.getRemainingItems(craftMatrix);
             }
         }
 
         ItemStack[] aitemstack = new ItemStack[craftMatrix.getSizeInventory()];
 
-        for (int i = 0; i < aitemstack.length; ++i)
-        {
+        for (int i = 0; i < aitemstack.length; ++i) {
             aitemstack[i] = craftMatrix.getStackInSlot(i);
         }
 
         return aitemstack;
     }
 
-    public List<IRecipe> getRecipes()
-    {
+    public List<IRecipe> getRecipes() {
         return this.recipes;
     }
 }

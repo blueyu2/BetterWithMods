@@ -3,13 +3,7 @@ package betterwithmods.blocks;
 import betterwithmods.BWMod;
 import betterwithmods.api.block.IMechanicalBlock;
 import betterwithmods.api.block.IMultiVariants;
-import betterwithmods.blocks.tile.TileEntityCauldron;
-import betterwithmods.blocks.tile.TileEntityCookingPot;
-import betterwithmods.blocks.tile.TileEntityCrucible;
-import betterwithmods.blocks.tile.TileEntityFilteredHopper;
-import betterwithmods.blocks.tile.TileEntityMill;
-import betterwithmods.blocks.tile.TileEntityPulley;
-import betterwithmods.blocks.tile.TileEntityTurntable;
+import betterwithmods.blocks.tile.*;
 import betterwithmods.config.BWConfig;
 import betterwithmods.util.DirUtils;
 import betterwithmods.util.InvUtils;
@@ -31,14 +25,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -176,14 +163,16 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
         }
     }
 
+    @Override
     public boolean hasComparatorInputOverride(IBlockState state) {
         return true;
     }
 
+    @Override
     public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos) {
         TileEntity tile = worldIn.getTileEntity(pos);
         if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
-            if(tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+            if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
                 return InvUtils.calculateComparatorLevel(tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null));
             }
         }

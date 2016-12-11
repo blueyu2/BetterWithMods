@@ -86,7 +86,7 @@ public class BlockMiningCharge extends BWMBlock {
 
         if (!worldIn.isRemote && state.getValue(EXPLODE)) {
             EntityMiningCharge miningCharge = new EntityMiningCharge(worldIn, (double) ((float) pos.getX() + 0.5F), (double) pos.getY(), (double) ((float) pos.getZ() + 0.5F), igniter, getFacingFromBlockState(state));
-            worldIn.spawnEntityInWorld(miningCharge);
+            worldIn.spawnEntity(miningCharge);
             worldIn.playSound(null, miningCharge.posX, miningCharge.posY, miningCharge.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
     }
@@ -97,7 +97,7 @@ public class BlockMiningCharge extends BWMBlock {
     }
 
     @Override
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
         return getDefaultState().withProperty(DirUtils.FACING, facing);
     }
 
@@ -129,7 +129,7 @@ public class BlockMiningCharge extends BWMBlock {
         if (!worldIn.isRemote) {
             EntityMiningCharge miningCharge = new EntityMiningCharge(worldIn, (double) ((float) pos.getX() + 0.5F), (double) pos.getY(), (double) ((float) pos.getZ() + 0.5F), explosionIn.getExplosivePlacedBy(), getFacingFromBlockState(state));
             miningCharge.setFuse((short) (worldIn.rand.nextInt(miningCharge.getFuse() / 4) + miningCharge.getFuse() / 8));
-            worldIn.spawnEntityInWorld(miningCharge);
+            worldIn.spawnEntity(miningCharge);
         }
     }
 

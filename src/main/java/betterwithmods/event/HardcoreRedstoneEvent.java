@@ -20,17 +20,17 @@ public class HardcoreRedstoneEvent {
 
     @SubscribeEvent
     public void disableRedstone(BlockEvent.NeighborNotifyEvent event) {
-        if(!BWConfig.hardcoreRedstone)
+        if (!BWConfig.hardcoreRedstone)
             return;
 
         event.setCanceled(true);
         World world = event.getWorld();
         BlockPos pos = event.getPos();
-        for(EnumFacing facing : event.getNotifiedSides()){
+        for (EnumFacing facing : event.getNotifiedSides()) {
             IBlockState state = world.getBlockState(pos.offset(facing));
             Block block = state.getBlock();
-            if(block instanceof BlockDoor || block instanceof BlockFenceGate || block instanceof BlockTrapDoor) {
-                if(!state.getMaterial().equals(Material.IRON))
+            if (block instanceof BlockDoor || block instanceof BlockFenceGate || block instanceof BlockTrapDoor) {
+                if (!state.getMaterial().equals(Material.IRON))
                     continue;
             }
             world.notifyBlockOfStateChange(pos.offset(facing), event.getState().getBlock());

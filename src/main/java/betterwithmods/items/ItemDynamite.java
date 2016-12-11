@@ -49,7 +49,7 @@ public class ItemDynamite extends Item {
 
             stack.stackSize--;
             EntityDynamite dynamite = new EntityDynamite(world, player, new ItemStack(this, 1), lit);
-            world.spawnEntityInWorld(dynamite);
+            world.spawnEntity(dynamite);
 
             if (lit)
                 world.playSound(null, new BlockPos(dynamite.posX, dynamite.posY, dynamite.posZ), SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.AMBIENT, 1.0F, 1.0F);

@@ -19,14 +19,12 @@ public class InventorySteelAnvilCrafting extends InventoryCrafting {
     }
 
     @Override
-    public ItemStack getStackInSlot(int index)
-    {
+    public ItemStack getStackInSlot(int index) {
         return index >= this.getSizeInventory() ? null : anvil.getStackInSlot(index);
     }
 
     @Override
-    public ItemStack getStackInRowAndColumn(int row, int column)
-    {
+    public ItemStack getStackInRowAndColumn(int row, int column) {
         return row >= 0 && row < 4 && column >= 0 && column <= 4 ? this.getStackInSlot(row + column * 4) : null;
     }
 
@@ -34,23 +32,20 @@ public class InventorySteelAnvilCrafting extends InventoryCrafting {
     public ItemStack decrStackSize(int index, int count) {
         ItemStack stack = anvil.getStackInSlot(index);
         if (stack != null) {
-            ItemStack itemstack;
+            ItemStack newStack;
             if (stack.stackSize <= count) {
-                itemstack = stack.copy();
-                stack = null;
+                newStack = stack.copy();
                 anvil.setInventorySlotContents(index, null);
                 this.container.onCraftMatrixChanged(this);
-                return itemstack;
-            }
-            else {
-                itemstack = stack.splitStack(count);
+                return newStack;
+            } else {
+                newStack = stack.splitStack(count);
                 if (stack.stackSize == 0)
-                    stack = null;
+                    anvil.setInventorySlotContents(index, null);
                 this.container.onCraftMatrixChanged(this);
-                return itemstack;
+                return newStack;
             }
-        }
-        else
+        } else
             return null;
     }
 

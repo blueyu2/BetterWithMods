@@ -109,9 +109,9 @@ public class NetherSpawnEvent {
                 double monX = evt.getEntity().posX;
                 double monY = evt.getEntity().posY;
                 double monZ = evt.getEntity().posZ;
-                int x = MathHelper.floor_double(monX);
-                int y = MathHelper.floor_double(monY);
-                int z = MathHelper.floor_double(monZ);
+                int x = MathHelper.floor(monX);
+                int y = MathHelper.floor(monY);
+                int z = MathHelper.floor(monZ);
                 BlockPos pos = new BlockPos(x, y - 1, z);
                 Block block = evt.getWorld().getBlockState(pos).getBlock();
                 int meta = evt.getWorld().getBlockState(pos).getBlock().getMetaFromState(evt.getWorld().getBlockState(pos));

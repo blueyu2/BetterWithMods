@@ -41,13 +41,13 @@ public class BlockAesthetic extends BWMBlock implements IMultiVariants {
 
     @Override
     public void onBlockExploded(World world, BlockPos pos, Explosion explosion) {
-        if(world.getBlockState(pos).getValue(blockType) != EnumType.STEEL)
+        if (world.getBlockState(pos).getValue(blockType) != EnumType.STEEL)
             super.onBlockExploded(world, pos, explosion);
     }
 
     @Override
     public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
-        if(world.getBlockState(pos).getValue(blockType) != EnumType.STEEL)
+        if (world.getBlockState(pos).getValue(blockType) != EnumType.STEEL)
             return 10;
         else
             return 2000.0F;

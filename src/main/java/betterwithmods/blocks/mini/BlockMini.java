@@ -56,7 +56,7 @@ public abstract class BlockMini extends BWMBlock {
         if (world.isRemote && emptyHands)
             return true;
         else if (!world.isRemote && emptyHands) {
-            int nextOrient = (state.getValue(property) + 1) % (getMaxOrientation()+1);
+            int nextOrient = (state.getValue(property) + 1) % (getMaxOrientation() + 1);
             world.playSound(null, pos, this.getSoundType(state, world, pos, player).getPlaceSound(), SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             world.setBlockState(pos, state.withProperty(property, nextOrient));
             world.notifyNeighborsOfStateChange(pos, this);
@@ -83,8 +83,8 @@ public abstract class BlockMini extends BWMBlock {
     }
 
     @Override
-    public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float flX, float flY, float flZ, int meta, EntityLivingBase placer) {
-        return metaBlockPlace(facing, flX, flY, flZ);
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+        return metaBlockPlace(facing, hitX, hitY, hitZ);
     }
 
     @Override
@@ -172,6 +172,12 @@ public abstract class BlockMini extends BWMBlock {
 
         private static final BlockMini.EnumType[] META_LOOKUP = new BlockMini.EnumType[values().length];
 
+        static {
+            for (BlockMini.EnumType blockmini$enumtype : values()) {
+                META_LOOKUP[blockmini$enumtype.getMetadata()] = blockmini$enumtype;
+            }
+        }
+
         private final int meta;
         private final String name;
         private final ItemStack block;
@@ -186,36 +192,24 @@ public abstract class BlockMini extends BWMBlock {
             this.block = blockIn;
         }
 
-        public int getMetadata()
-        {
-            return this.meta;
-        }
-
-        public String getName()
-        {
-            return this.name;
-        }
-
-        public ItemStack getBlock() {
-            return this.block;
-        }
-
-        public static BlockMini.EnumType byMetadata(int meta)
-        {
-            if (meta < 0 || meta >= META_LOOKUP.length)
-            {
+        public static BlockMini.EnumType byMetadata(int meta) {
+            if (meta < 0 || meta >= META_LOOKUP.length) {
                 meta = 0;
             }
 
             return META_LOOKUP[meta];
         }
 
-        static
-        {
-            for (BlockMini.EnumType blockmini$enumtype : values())
-            {
-                META_LOOKUP[blockmini$enumtype.getMetadata()] = blockmini$enumtype;
-            }
+        public int getMetadata() {
+            return this.meta;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public ItemStack getBlock() {
+            return this.block;
         }
     }
 }

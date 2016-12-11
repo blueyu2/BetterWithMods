@@ -71,7 +71,7 @@ public class ImmersiveEngineering implements ICompatModule {
     public void init() {
 
         ItemStack conveyorStack = ConveyorHandler.getConveyorStack("immersiveengineering:conveyor");
-        addOredictRecipe(Utils.copyStackWithAmount(conveyorStack, 8), new Object[]{"LLL", "IRI", Character.valueOf('I'), "ingotIron", Character.valueOf('R'), "dustRedstone", Character.valueOf('L'), ItemMaterial.getMaterial("leather_cut")});
+        addOredictRecipe(Utils.copyStackWithAmount(conveyorStack, 8), "LLL", "IRI", Character.valueOf('I'), "ingotIron", Character.valueOf('R'), "dustRedstone", Character.valueOf('L'), ItemMaterial.getMaterial("leather_cut"));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(TREATED_AXLE), "W", "R", "W", 'W', "plankTreatedWood", 'R', BWMBlocks.ROPE));
         Fluid seedOil = FluidRegistry.getFluid("plantoil");
         SqueezerRecipe.addRecipe(new FluidStack(seedOil, 120), null, new ItemStack(BWMBlocks.HEMP, 1, 0), 6400);

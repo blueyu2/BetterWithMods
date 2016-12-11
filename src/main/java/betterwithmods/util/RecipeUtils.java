@@ -2,11 +2,7 @@ package betterwithmods.util;
 
 import betterwithmods.BWCrafting;
 import betterwithmods.BWMod;
-import betterwithmods.craft.bulk.CraftingManagerCauldron;
-import betterwithmods.craft.bulk.CraftingManagerCauldronStoked;
-import betterwithmods.craft.bulk.CraftingManagerCrucible;
-import betterwithmods.craft.bulk.CraftingManagerCrucibleStoked;
-import betterwithmods.craft.bulk.CraftingManagerMill;
+import betterwithmods.craft.bulk.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -32,9 +28,9 @@ public final class RecipeUtils {
     public static void removeFurnaceRecipe(ItemStack input) {
         Iterator<Map.Entry<ItemStack, ItemStack>> iter = FurnaceRecipes.instance().getSmeltingList().entrySet().iterator();
         while (iter.hasNext()) {
-            Map.Entry<ItemStack,ItemStack> next = iter.next();
+            Map.Entry<ItemStack, ItemStack> next = iter.next();
             //for some reason mojang put fucking wildcard for their ore meta
-            if(next.getKey().isItemEqual(input) || (next.getKey().getItem() == input.getItem() && next.getKey().getMetadata() == OreDictionary.WILDCARD_VALUE)) {
+            if (next.getKey().isItemEqual(input) || (next.getKey().getItem() == input.getItem() && next.getKey().getMetadata() == OreDictionary.WILDCARD_VALUE)) {
                 iter.remove();
             }
         }

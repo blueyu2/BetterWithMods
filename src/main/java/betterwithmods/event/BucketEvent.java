@@ -24,11 +24,7 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fluids.DispenseFluidContainer;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -181,19 +177,19 @@ public class BucketEvent {
 
     @SubscribeEvent
     public void checkPlayerInventory(TickEvent.PlayerTickEvent e) {
-        World world = e.player.worldObj;
-        if(BWConfig.hardcoreLavaBuckets) {
-            if(world.getTotalWorldTime() % 10 == 0) {
+        World world = e.player.getEntityWorld();
+        if (BWConfig.hardcoreLavaBuckets) {
+            if (world.getTotalWorldTime() % 10 == 0) {
                 if (!e.player.isPotionActive(MobEffects.FIRE_RESISTANCE)) {
                     IItemHandler inv = e.player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
                     BlockPos pos = e.player.getPosition();
                     for (int i = 0; i < inv.getSlots(); i++) {
                         ItemStack stack = inv.getStackInSlot(i);
-                        if(world.rand.nextInt(50)==0) {
+                        if (world.rand.nextInt(50) == 0) {
                             if (stack != null && stack.isItemEqual(new ItemStack(Items.LAVA_BUCKET))) {
                                 IFluidHandler bucket = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
                                 bucket.drain(1000, true);
-                                world.playSound(e.player,pos,SoundEvents.ITEM_BUCKET_EMPTY_LAVA,SoundCategory.PLAYERS,1,1);
+                                world.playSound(e.player, pos, SoundEvents.ITEM_BUCKET_EMPTY_LAVA, SoundCategory.PLAYERS, 1, 1);
                                 placeLavaBucket(world, pos.offset(e.player.getHorizontalFacing()), 0);
                             }
                         }
@@ -202,25 +198,27 @@ public class BucketEvent {
             }
         }
     }
+
     public void placeLavaBucket(World world, BlockPos pos, int depth) {
-        if(depth >= 5)
+        if (depth >= 5)
             return;
-        if(world.isAirBlock(pos)) {
-            world.setBlockState(pos,Blocks.FLOWING_LAVA.getDefaultState());
+        if (world.isAirBlock(pos)) {
+            world.setBlockState(pos, Blocks.FLOWING_LAVA.getDefaultState());
         } else {
-            placeLavaBucket(world,pos.offset(EnumFacing.VALUES[world.rand.nextInt(6)]), depth++);
+            placeLavaBucket(world, pos.offset(EnumFacing.VALUES[world.rand.nextInt(6)]), depth++);
         }
     }
+
     @SubscribeEvent
     public void onFillBucket(FillBucketEvent e) {
-        if(BWConfig.hardcoreLavaBuckets) {
+        if (BWConfig.hardcoreLavaBuckets) {
             if (e.getEntityPlayer().isPotionActive(MobEffects.FIRE_RESISTANCE))
                 return;
             if (e.getTarget() != null && e.getTarget().getBlockPos() != null) {
                 Block block = e.getWorld().getBlockState(e.getTarget().getBlockPos()).getBlock();
                 if (block == Blocks.LAVA || block == Blocks.FLOWING_LAVA) {
-                    e.getEntityPlayer().attackEntityFrom(DamageSource.lava,1);
-                    e.getWorld().playSound(null,e.getTarget().getBlockPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS,1,1.5f);
+                    e.getEntityPlayer().attackEntityFrom(DamageSource.lava, 1);
+                    e.getWorld().playSound(null, e.getTarget().getBlockPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1.5f);
                     e.setCanceled(true);
                 }
             }

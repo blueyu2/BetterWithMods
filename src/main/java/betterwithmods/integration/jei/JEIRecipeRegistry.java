@@ -5,7 +5,8 @@ import betterwithmods.craft.KilnInteraction;
 import betterwithmods.craft.SawInteraction;
 import betterwithmods.craft.TurntableInteraction;
 import betterwithmods.craft.bulk.*;
-import betterwithmods.craft.steelanvil.*;
+import betterwithmods.craft.steelanvil.CraftingManagerSteelAnvil;
+import betterwithmods.craft.steelanvil.ShapedSteelAnvilRecipe;
 import betterwithmods.integration.jei.wrapper.*;
 import mezz.jei.api.IJeiHelpers;
 import net.minecraft.item.crafting.IRecipe;
@@ -98,7 +99,7 @@ public class JEIRecipeRegistry {
     private static List<SteelAnvilShapelessRecipeWrapper> getSteelAnvilShapelessRecipes(CraftingManagerSteelAnvil manager, IJeiHelpers helper) {
         List<SteelAnvilShapelessRecipeWrapper> recipes = new ArrayList<>();
         for (IRecipe recipe : manager.getRecipes()) {
-            if(recipe instanceof ShapelessOreRecipe)
+            if (recipe instanceof ShapelessOreRecipe)
                 recipes.add(new SteelAnvilShapelessRecipeWrapper(helper, (ShapelessOreRecipe) recipe));
         }
         return recipes;
@@ -107,7 +108,7 @@ public class JEIRecipeRegistry {
     private static List<SteelAnvilShapedRecipeWrapper> getSteelAnvilShapedRecipes(CraftingManagerSteelAnvil manager, IJeiHelpers helper) {
         List<SteelAnvilShapedRecipeWrapper> recipes = new ArrayList<>();
         for (IRecipe recipe : manager.getRecipes()) {
-            if(recipe instanceof ShapedSteelAnvilRecipe)
+            if (recipe instanceof ShapedSteelAnvilRecipe)
                 recipes.add(new SteelAnvilShapedRecipeWrapper(helper, (ShapedSteelAnvilRecipe) recipe));
         }
         return recipes;
