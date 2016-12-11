@@ -31,7 +31,7 @@ import java.util.List;
 
 import static betterwithmods.blocks.tile.TileEntityFilteredHopper.putDropInInventoryAllSlots;
 
-public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
+public abstract class TileEntityCookingPot extends TileEntityVisibleInventory implements IFacing {
     public int cookCounter;
     public int stokedCooldownCounter;
     public int scaledCookCounter;
@@ -50,6 +50,10 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory {
         this.facing = 1;
     }
 
+    @Override
+    public int getFacing() {
+        return facing;
+    }
 
     @Override
     public SimpleItemStackHandler createItemStackHandler() {

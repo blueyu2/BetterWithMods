@@ -247,6 +247,8 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
                 return new TileEntityFilteredHopper();
             case TURNTABLE:
                 return new TileEntityTurntable();
+            case VESSEL:
+                return new TileEntityVessel();
         }
         return null;
     }
@@ -374,7 +376,7 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
         boolean isOn = world.getBlockState(pos).getValue(ISACTIVE);
         if (type == BlockMechMachines.EnumType.MILL && isOn)
             updateMill(world, pos, rand);
-        else if (!isOn && (type == BlockMechMachines.EnumType.CAULDRON || type == BlockMechMachines.EnumType.CRUCIBLE || type == BlockMechMachines.EnumType.VESSEL))
+        else if (!isOn && (type == BlockMechMachines.EnumType.CAULDRON || type == BlockMechMachines.EnumType.CRUCIBLE))
             updateCookingPot(world, pos, rand);
     }
 
@@ -457,9 +459,9 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
         int facing = 1;
         TileEntity tile = world.getTileEntity(pos);
         if (tile != null) {
-            if (tile instanceof TileEntityCookingPot) {
+            if (tile instanceof IFacing) {
                 //TODO Kills performance from rendering updates, should be fixed by separating cooking pots out
-                facing = ((TileEntityCookingPot) tile).facing;
+                facing = ((IFacing) tile).getFacing();
             }
         }
         return state.withProperty(DirUtils.TILTING, EnumFacing.getFront(facing));
