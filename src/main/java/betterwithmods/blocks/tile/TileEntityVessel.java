@@ -8,6 +8,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
@@ -23,8 +24,23 @@ import java.util.List;
  */
 public class TileEntityVessel extends TileEntity implements IFacing, ITickable {
     public int xp;
-    private final int xpMax = 800;
-    public int facing;
+    public final int xpMax = 800;
+    private int facing;
+
+    public TileEntityVessel() {
+        this.xp = 0;
+        this.facing = 1;
+    }
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.getPos(), getBlockMetadata(), writeToNBT(new NBTTagCompound()));
+    }
+
+    @Override
+    public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt) {
+        readFromNBT(pkt.getNbtCompound());
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
@@ -43,14 +59,12 @@ public class TileEntityVessel extends TileEntity implements IFacing, ITickable {
 
     @Override
     public void update() {
+        System.out.println(this.getWorld().isRemote + ": " + xp);
         if (this.getWorld().isRemote)
             return;
 
         if (this.getWorld().getBlockState(this.pos).getBlock() instanceof BlockMechMachines) {
             BlockMechMachines block = (BlockMechMachines) this.getWorld().getBlockState(this.pos).getBlock();
-            if (block.isCurrentStateValid(getWorld(), pos)) {
-                getWorld().scheduleBlockUpdate(pos, block, block.tickRate(getWorld()), 5);
-            }
             IBlockState state = this.getWorld().getBlockState(this.pos);
             boolean stateChanged = state.getValue(DirUtils.TILTING) != EnumFacing.getFront(facing);
             if (stateChanged) {
@@ -72,10 +86,10 @@ public class TileEntityVessel extends TileEntity implements IFacing, ITickable {
                     }
                 }
                 facing = power.getIndex();
-                EnumFacing dumpToward = DirUtils.rotateFacingAroundY(power, false);
+                /*EnumFacing dumpToward = DirUtils.rotateFacingAroundY(power, false);
                 if (power != EnumFacing.UP && xp > 0) {
-                    ejectXP(dumpToward);
-                }
+                    //ejectXP(dumpToward);
+                }*/
 
             }
         }
@@ -87,7 +101,8 @@ public class TileEntityVessel extends TileEntity implements IFacing, ITickable {
             flag = captureDroppedXP();
         }
         if (flag) {
-            getWorld().scheduleBlockUpdate(pos, this.getBlockType(), this.getBlockType().tickRate(getWorld()), 5);
+            IBlockState state = this.getWorld().getBlockState(this.pos);
+            this.getWorld().notifyBlockUpdate(this.pos, state, state, 5);
             this.markDirty();
         }
     }
@@ -111,7 +126,7 @@ public class TileEntityVessel extends TileEntity implements IFacing, ITickable {
         return false;
     }
 
-    public void ejectXP(EnumFacing facing) {
+    private void ejectXP(EnumFacing facing) {
         BlockPos target = pos.offset(facing);
         IBlockState targetState = getWorld().getBlockState(target);
         boolean ejectIntoWorld = getWorld().isAirBlock(target) || targetState.getBlock().isReplaceable(getWorld(), target) || !targetState.getMaterial().isSolid() || targetState.getBoundingBox(getWorld(), target).maxY < 0.5d;

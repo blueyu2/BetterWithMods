@@ -3,10 +3,7 @@ package betterwithmods.proxy;
 import betterwithmods.BWMBlocks;
 import betterwithmods.BWMItems;
 import betterwithmods.BWMod;
-import betterwithmods.blocks.tile.TileEntityCauldron;
-import betterwithmods.blocks.tile.TileEntityCrucible;
-import betterwithmods.blocks.tile.TileEntityFilteredHopper;
-import betterwithmods.blocks.tile.TileEntityTurntable;
+import betterwithmods.blocks.tile.*;
 import betterwithmods.blocks.tile.gen.TileEntityWaterwheel;
 import betterwithmods.blocks.tile.gen.TileEntityWindmillHorizontal;
 import betterwithmods.blocks.tile.gen.TileEntityWindmillVertical;
@@ -62,6 +59,7 @@ public class ClientProxy implements IProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTurntable.class, new TESRTurntable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrucible.class, new TESRCrucible());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCauldron.class, new TESRCauldron());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityVessel.class, new TESRVessel());
 
     }
 

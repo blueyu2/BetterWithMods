@@ -140,6 +140,7 @@ public final class BWMBlocks {
         GameRegistry.registerTileEntity(TileEntityCrucible.class, "bwm.crucible");
         GameRegistry.registerTileEntity(TileEntityTurntable.class, "bwm.turntable");
         GameRegistry.registerTileEntity(TileEntitySteelAnvil.class, "bwm.steelAnvil");
+        GameRegistry.registerTileEntity(TileEntityVessel.class, "bwm.vessel");
 
         GameRegistry.registerTileEntity(TileEntityVase.class, "bwm.vase");
 
