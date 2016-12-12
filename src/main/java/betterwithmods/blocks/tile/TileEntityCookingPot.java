@@ -37,7 +37,7 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory im
     public int scaledCookCounter;
     public boolean containsValidIngredients;
     public int fireIntensity;
-    public int facing;
+    public EnumFacing facing;
     private boolean forceValidation;
 
     public TileEntityCookingPot() {
@@ -47,11 +47,11 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory im
         this.scaledCookCounter = 0;
         this.fireIntensity = -1;
         this.occupiedSlots = 0;
-        this.facing = 1;
+        this.facing = EnumFacing.UP;
     }
 
     @Override
-    public int getFacing() {
+    public EnumFacing getEnumFacing() {
         return facing;
     }
 
@@ -64,7 +64,7 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory im
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         this.fireIntensity = tag.hasKey("fireIntensity") ? tag.getInteger("fireIntensity") : -1;
-        this.facing = tag.hasKey("facing") ? tag.getInteger("facing") : 1;
+        this.facing = tag.hasKey("facing") ? EnumFacing.getFront(tag.getInteger("facing")) : EnumFacing.UP;
         validateInventory();
     }
 
@@ -72,7 +72,7 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory im
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         NBTTagCompound t = super.writeToNBT(tag);
         t.setInteger("fireIntensity", this.fireIntensity);
-        t.setInteger("facing", facing);
+        t.setInteger("facing", facing.getIndex());
         return t;
     }
 
@@ -87,7 +87,7 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory im
                 getWorld().scheduleBlockUpdate(pos, block, block.tickRate(getWorld()), 5);
             }
             IBlockState state = this.getWorld().getBlockState(this.pos);
-            boolean stateChanged = state.getValue(DirUtils.TILTING) != EnumFacing.getFront(facing);
+            boolean stateChanged = state.getValue(DirUtils.TILTING) != facing;
             if (this.getWorld() != null && stateChanged) {
                 this.getWorld().notifyBlockUpdate(this.pos, state, state, 3);
             }
@@ -97,7 +97,7 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory im
             }
 
             if (!block.isMechanicalOn(this.getWorld(), this.pos)) {
-                this.facing = 1;
+                this.facing = EnumFacing.UP;
                 entityCollision();
                 if (this.fireIntensity > 0) {
                     if (this.forceValidation) {
@@ -123,20 +123,18 @@ public abstract class TileEntityCookingPot extends TileEntityVisibleInventory im
                     this.cookCounter = 0;
             } else {
                 this.cookCounter = 0;
-                EnumFacing power = EnumFacing.UP;
                 if (getWorld().getBlockState(pos).getValue(BlockMechMachines.ISACTIVE)) {
                     for (EnumFacing f : EnumFacing.HORIZONTALS) {
-                        if (power != EnumFacing.UP) {
+                        if (facing != EnumFacing.UP) {
                             MechanicalUtil.destoryHorizontalAxles(getWorld(), getPos().offset(f));
                         }
                         if (MechanicalUtil.isBlockPoweredByAxleOnSide(getWorld(), pos, f) || MechanicalUtil.isPoweredByCrankOnSide(getWorld(), pos, f)) {
-                            power = f;
+                            facing = f;
                         }
                     }
                 }
-                facing = power.getIndex();
-                EnumFacing dumpToward = DirUtils.rotateFacingAroundY(power, false);
-                if (power != EnumFacing.UP && filledSlots() > 0) {
+                EnumFacing dumpToward = DirUtils.rotateFacingAroundY(facing, false);
+                if (facing != EnumFacing.UP && filledSlots() > 0) {
                     ejectInventory(dumpToward);
                 }
 

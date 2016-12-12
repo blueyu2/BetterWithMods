@@ -25,11 +25,11 @@ import java.util.List;
 public class TileEntityVessel extends TileEntity implements IFacing, ITickable {
     public int xp;
     public final int xpMax = 800;
-    private int facing;
+    private EnumFacing facing;
 
     public TileEntityVessel() {
         this.xp = 0;
-        this.facing = 1;
+        this.facing = EnumFacing.UP;
     }
 
     @Override
@@ -46,14 +46,14 @@ public class TileEntityVessel extends TileEntity implements IFacing, ITickable {
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         this.xp = tag.hasKey("xp") ? tag.getInteger("xp") : 0;
-        this.facing = tag.hasKey("facing") ? tag.getInteger("facing") : 1;
+        this.facing = tag.hasKey("facing") ? EnumFacing.getFront(tag.getInteger("facing")) : EnumFacing.UP;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         NBTTagCompound t = super.writeToNBT(tag);
         t.setInteger("xp", this.xp);
-        t.setInteger("facing", facing);
+        t.setInteger("facing", facing.getIndex());
         return t;
     }
 
@@ -66,31 +66,28 @@ public class TileEntityVessel extends TileEntity implements IFacing, ITickable {
         if (this.getWorld().getBlockState(this.pos).getBlock() instanceof BlockMechMachines) {
             BlockMechMachines block = (BlockMechMachines) this.getWorld().getBlockState(this.pos).getBlock();
             IBlockState state = this.getWorld().getBlockState(this.pos);
-            boolean stateChanged = state.getValue(DirUtils.TILTING) != EnumFacing.getFront(facing);
+            boolean stateChanged = state.getValue(DirUtils.TILTING) != facing;
             if (stateChanged) {
                 this.getWorld().notifyBlockUpdate(this.pos, state, state, 3);
             }
             if (!block.isMechanicalOn(this.getWorld(), this.pos)) {
-                this.facing = 1;
+                this.facing = EnumFacing.UP;
                 entityCollision();
             } else {
-                EnumFacing power = EnumFacing.UP;
                 if (getWorld().getBlockState(pos).getValue(BlockMechMachines.ISACTIVE)) {
                     for (EnumFacing f : EnumFacing.HORIZONTALS) {
-                        if (power != EnumFacing.UP) {
+                        if (facing != EnumFacing.UP) {
                             MechanicalUtil.destoryHorizontalAxles(getWorld(), getPos().offset(f));
                         }
                         if (MechanicalUtil.isBlockPoweredByAxleOnSide(getWorld(), pos, f) || MechanicalUtil.isPoweredByCrankOnSide(getWorld(), pos, f)) {
-                            power = f;
+                            facing = f;
                         }
                     }
                 }
-                facing = power.getIndex();
-                /*EnumFacing dumpToward = DirUtils.rotateFacingAroundY(power, false);
-                if (power != EnumFacing.UP && xp > 0) {
+                /*EnumFacing dumpToward = DirUtils.rotateFacingAroundY(facing, false);
+                if (facing != EnumFacing.UP && xp > 0) {
                     //ejectXP(dumpToward);
                 }*/
-
             }
         }
     }
@@ -143,7 +140,7 @@ public class TileEntityVessel extends TileEntity implements IFacing, ITickable {
     }
 
     @Override
-    public int getFacing() {
+    public EnumFacing getEnumFacing() {
         return facing;
     }
 }

@@ -456,15 +456,15 @@ public class BlockMechMachines extends BWMBlock implements IMechanicalBlock, ITi
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        int facing = 1;
+        EnumFacing facing = EnumFacing.UP;
         TileEntity tile = world.getTileEntity(pos);
         if (tile != null) {
             if (tile instanceof IFacing) {
                 //TODO Kills performance from rendering updates, should be fixed by separating cooking pots out
-                facing = ((IFacing) tile).getFacing();
+                facing = ((IFacing) tile).getEnumFacing();
             }
         }
-        return state.withProperty(DirUtils.TILTING, EnumFacing.getFront(facing));
+        return state.withProperty(DirUtils.TILTING, facing);
     }
 
     @Override
