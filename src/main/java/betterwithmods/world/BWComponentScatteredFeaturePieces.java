@@ -2,6 +2,7 @@ package betterwithmods.world;
 
 import betterwithmods.BWMBlocks;
 import betterwithmods.blocks.BlockAesthetic;
+import betterwithmods.blocks.BlockMechMachines;
 import betterwithmods.event.BWMWorldGenEvent;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
@@ -250,7 +251,7 @@ public class BWComponentScatteredFeaturePieces extends ComponentScatteredFeature
                 removeChest(worldIn, 9, -3, 10, randomIn);
             } else {
                 this.setBlockState(worldIn, BWMBlocks.HAND_CRANK.getDefaultState(), 5, 3, 10, structureBoundingBoxIn);
-                //TODO add Vessel of the Dragon @ 6, 3, 10
+                this.setBlockState(worldIn, BWMBlocks.SINGLE_MACHINES.getDefaultState().withProperty(BlockMechMachines.MACHINETYPE, BlockMechMachines.EnumType.VESSEL), 6, 3, 10, structureBoundingBoxIn);
             }
 
             return result;
